@@ -20,6 +20,10 @@ const App = ({ children }: { children: React.ReactNode }) => {
         className="flex flex-col items-center h-full w-full"
         data-theme={theme}
       >
+        <div className="flex justify-center pt-10">
+          <h1 className="text-2xl">Bitaxe Stat Plotter</h1>
+        </div>
+
         <main className="flex flex-col items-center h-full w-full">
           {children}
         </main>

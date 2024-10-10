@@ -1,19 +1,22 @@
 "use client";
-import Chart from "chart.js/auto";
 import { useState, useEffect } from "react";
-import { Line } from "react-chartjs-2";
-import { CategoryScale } from "chart.js";
 
 import type { ChartData } from "./_components/BitaxeLineChart";
 import BitaxeLineChart from "./_components/BitaxeLineChart";
-
-Chart.register(CategoryScale);
+import ChartSelector from "./_components/ChartSelector";
 
 export default function Home() {
+  const chartNameMap = {
+    temp: "Temperature (C)",
+    hashRate: "Hash Rate (TH/s)",
+    power: "Power (W)",
+  };
   const [data, setData] = useState<ChartData>({
     labels: [],
     bitaxeData: { temp: [], hashRate: [], power: [] },
   });
+
+  const [selectedCharts, setSelectedCharts] = useState<string[]>([]);
 
   const getSystemInfo = async () => {
     // TODO: User inputs address of bitaxe(s)
@@ -49,24 +52,30 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  // TODO: Need a way to have a "settings" component for configurations which feeds back into charts, etc
+  // TODO: Add a way to turn off polling for updates
   return (
-    <div className="grid grid-cols-2 gap-4 w-4/5">
-      <div className="">
-        <BitaxeLineChart data={data} target="temp" label="Temperature (C)" />
-      </div>
-      <div className="">
-        <BitaxeLineChart
-          data={data}
-          target="hashRate"
-          label="Hashrate (TH/s)"
-        />
-      </div>
-      <div className="">
-        <BitaxeLineChart
-          data={data}
-          target="power"
-          label="Power (Watts)"
-        />
+    <div className="w-4/5 pt-5">
+      <ChartSelector
+        selectedCharts={selectedCharts}
+        setSelectedCharts={setSelectedCharts}
+      />
+
+      <div className="grid auto-cols-max grid-cols-2">
+        {selectedCharts.map((c, i) => {
+          // TODO: This doesn't resize correctly when you pick more than 1 and go back to a single chart
+          const useColSpan = i % 2 === 0 && i === selectedCharts.length - 1;
+          console.log(i, useColSpan);
+          return (
+            <div className={useColSpan ? "col-span-2" : ""}>
+              <BitaxeLineChart
+                data={data}
+                target={c as keyof typeof data.bitaxeData}
+                label={chartNameMap[c as keyof typeof data.bitaxeData]}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
