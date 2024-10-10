@@ -63,6 +63,7 @@ export default function Home() {
 
       <div className="grid auto-cols-max grid-cols-2">
         {selectedCharts.map((c, i) => {
+          // TODO: This doesn't resize correctly when you pick more than 1 and go back to a single chart
           const useColSpan = i % 2 === 0 && i === selectedCharts.length - 1;
           console.log(i, useColSpan);
           return (
