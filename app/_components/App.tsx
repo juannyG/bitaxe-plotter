@@ -1,22 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const App = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState(() => {
-    const theme = localStorage.getItem("theme");
-    return theme || "dracula";
-  });
+  const [theme, setTheme] = useState("");
+  useEffect(() => {
+    const t = window.localStorage.getItem("theme");
+    setTheme(t || "dracula");
+  }, []);
 
-  const selectNewTheme = ( theme: string ) => {
+  const selectNewTheme = (theme: string) => {
+    window.localStorage.setItem("theme", theme);
     setTheme(theme);
-    localStorage.setItem("theme", theme);
   };
 
   return (
     <>
-      <div className="flex flex-col items-center h-full w-full" data-theme={theme}>
-        <main className="flex flex-col items-center h-full w-full">{children}</main>
+      <div
+        className="flex flex-col items-center h-full w-full"
+        data-theme={theme}
+      >
+        <main className="flex flex-col items-center h-full w-full">
+          {children}
+        </main>
         <footer className="flex flex-column p-10">
           <label className="label pr-3">Set your theme:</label>
           <select
