@@ -1,4 +1,4 @@
-const DrawerMenuRow = ({...props}) => {
+const DrawerMenuRow = ({ ...props }) => {
   return (
     <li className="border-b border-t border-neutral-400">
       <a>
