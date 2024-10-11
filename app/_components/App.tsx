@@ -9,7 +9,8 @@ const App = ({ children }: { children: React.ReactNode }) => {
     setTheme(t || "dracula");
   }, []);
 
-  const selectNewTheme = (theme: string) => {
+  const selectNewTheme = (checked: boolean) => {
+    const theme = checked ? "dracula" : "light";
     window.localStorage.setItem("theme", theme);
     setTheme(theme);
   };
@@ -37,19 +38,6 @@ const App = ({ children }: { children: React.ReactNode }) => {
             <main className="flex flex-col items-center h-full w-full">
               {children}
             </main>
-
-            <footer className="flex flex-column justify-center p-10">
-              <label className="label pr-3">Set your theme:</label>
-              <select
-                className="select select-bordered"
-                value={theme}
-                onChange={(e) => selectNewTheme(e.target.value)}
-              >
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-                <option value="dracula">Dracula</option>
-              </select>
-            </footer>
           </div>
           <div className="drawer-side">
             <label
@@ -59,6 +47,40 @@ const App = ({ children }: { children: React.ReactNode }) => {
             ></label>
             <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
               {/* Sidebar content here */}
+
+
+              {/* CHART SELECTION */}
+              <li className="border-b border-t border-neutral-400">
+                <a>
+                  <div className="collapse">
+                    <input type="checkbox" />
+                    <div className="collapse-title text-xl font-medium">
+                      Graph Selector
+                    </div>
+                    <div className="collapse-content cursor-default">
+                      <label className="label cursor-default">
+                        <span className="label-text">Hash rate</span>
+                        <input type="checkbox" value="hashRate" className="checkbox" />
+                      </label>
+                      <label className="label cursor-default">
+                        <span className="label-text">Power</span>
+                        <input type="checkbox" value="power" className="checkbox" />
+                      </label>
+                      <label className="label cursor-default">
+                        <span className="label-text">Temp</span>
+                        <input type="checkbox" value="temp" className="checkbox" />
+                      </label>
+                      <label className="label cursor-default">
+                        <span className="label-text">Probability</span>
+                        <input type="checkbox" value="probability" className="checkbox" />
+                      </label>
+                    </div>
+                  </div>
+                </a>
+              </li>
+
+
+              {/* THEME SELECTION */}
               <li>
                 <a>
                   <div className="collapse">
@@ -67,51 +89,18 @@ const App = ({ children }: { children: React.ReactNode }) => {
                       Theme Selector
                     </div>
                     <div className="collapse-content cursor-default">
-                        <label className="label cursor-default">
-                          <span className="label-text">Light</span>
-                          <input
-                            type="radio"
-                            name="radio-10"
-                            className="radio checked:bg-white-500"
-                            checked={theme === "light"}
-                            value="light"
-                            onChange={(e) => selectNewTheme(e.target.value)}
-                          />
-                        </label>
-
-                        <label className="label cursor-default">
-                          <span className="label-text">Dark</span>
-                          <input
-                            type="radio"
-                            name="radio-10"
-                            className="radio checked:bg-black-500"
-                            checked={theme === "dark"}
-                            value="dark"
-                            onChange={(e) => selectNewTheme(e.target.value)}
-                          />
-                        </label>
-
-                        <label className="label cursor-default">
-                          <span className="label-text">Dracula</span>
-                          <input
-                            type="radio"
-                            name="radio-10"
-                            className="radio checked:bg-slate-500"
-                            value="dracula"
-                            checked={theme === "dracula"}
-                            onChange={(e) => selectNewTheme(e.target.value)}
-                          />
-                        </label>
+                      <label className="flex cursor-pointer gap-2">
+                        <span className="label-text">Light</span>
+                        <input
+                          type="checkbox"
+                          className="toggle theme-controller"
+                          onChange={(e) => selectNewTheme(e.target.checked) }
+                          checked={theme === "dracula" }
+                        />
+                        <span className="label-text">Dark</span>
+                      </label>
                     </div>
                   </div>
-                </a>
-              </li>
-              <li>
-                <a>Sidebar Item 2</a>
-              </li>
-              <li>
-                <a>
-                  Foo
                 </a>
               </li>
             </ul>
