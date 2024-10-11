@@ -1,22 +1,22 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
+import { ChartSelectionContext } from "./_contexts/ChartSelectionContext";
 import type { ChartData } from "./_components/BitaxeLineChart";
 import BitaxeLineChart from "./_components/BitaxeLineChart";
-import ChartSelector from "./_components/ChartSelector";
+import {
+  TEMP_KEY,
+  HASH_RATE_KEY,
+  POWER_KEY,
+  CHART_LABEL_MAP,
+} from "./_constants";
 
 export default function Home() {
-  const chartNameMap = {
-    temp: "Temperature (C)",
-    hashRate: "Hash Rate (TH/s)",
-    power: "Power (W)",
-  };
+  const selectedCharts = useContext(ChartSelectionContext);
   const [data, setData] = useState<ChartData>({
     labels: [],
-    bitaxeData: { temp: [], hashRate: [], power: [] },
+    bitaxeData: { [TEMP_KEY]: [], [HASH_RATE_KEY]: [], [POWER_KEY]: [] },
   });
-
-  const [selectedCharts, setSelectedCharts] = useState<string[]>([]);
 
   const getSystemInfo = async () => {
     // TODO: User inputs address of bitaxe(s)
@@ -25,7 +25,7 @@ export default function Home() {
       .then((j) => {
         setData((oldData) => {
           const now = new Date();
-          let newData = {
+          const newData = {
             labels: [...oldData.labels, now.toLocaleString("en-US")],
             bitaxeData: {
               temp: [...oldData.bitaxeData.temp, j.temp],
@@ -52,30 +52,30 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  // TODO: Need a way to have a "settings" component for configurations which feeds back into charts, etc
   // TODO: Add a way to turn off polling for updates
   return (
     <div className="w-4/5 pt-5">
-      <ChartSelector
-        selectedCharts={selectedCharts}
-        setSelectedCharts={setSelectedCharts}
-      />
-
       <div className="grid auto-cols-max grid-cols-2">
-        {selectedCharts.map((c, i) => {
-          // TODO: This doesn't resize correctly when you pick more than 1 and go back to a single chart
-          const useColSpan = i % 2 === 0 && i === selectedCharts.length - 1;
-          console.log(i, useColSpan);
-          return (
-            <div className={useColSpan ? "col-span-2" : ""}>
-              <BitaxeLineChart
-                data={data}
-                target={c as keyof typeof data.bitaxeData}
-                label={chartNameMap[c as keyof typeof data.bitaxeData]}
-              />
-            </div>
-          );
-        })}
+        {selectedCharts.length ? (
+          selectedCharts.map((c, i) => {
+            const useColSpan = i % 2 === 0 && i === selectedCharts.length - 1;
+            // Don't use a completely random key...
+            const key = useColSpan ? i + 1 * 10 : i;
+            return (
+              <div key={key} className={useColSpan ? "col-span-2" : ""}>
+                <BitaxeLineChart
+                  data={data}
+                  target={c as keyof typeof data.bitaxeData}
+                  label={CHART_LABEL_MAP[c as keyof typeof CHART_LABEL_MAP]}
+                />
+              </div>
+            );
+          })
+        ) : (
+          <div className="flex justify-center col-span-2">
+            Please select a chart to view.
+          </div>
+        )}
       </div>
     </div>
   );

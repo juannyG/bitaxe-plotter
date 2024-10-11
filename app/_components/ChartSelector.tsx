@@ -1,59 +1,30 @@
 "use client";
 
-import { Dispatch, SetStateAction } from "react";
+import { AVAILABLE_CHART_KEYS, LABEL_MAP } from "../_constants";
 
-const ChartSelector = ({
-  selectedCharts,
-  setSelectedCharts
-}: {
-  selectedCharts: string[];
-  setSelectedCharts: Dispatch<SetStateAction<string[]>>;
-}) => {
-  const handleSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, checked } = e.target as HTMLInputElement;
-    if (checked === true) {
-      setSelectedCharts([...selectedCharts, value].sort());
-    } else {
-      setSelectedCharts(selectedCharts.filter((c) => c !== value).sort());
-    }
-  };
-
-  const chartCBMap = {
-    temp: "Temp",
-    hashRate: "Hash rate",
-    power: "Power"
-  }
-
+const ChartSelector = ({ ...props }) => {
   return (
-    <div>
-      <div className="flex justify-center">
-        Please select which graphs you'd like to see:
-      </div>
-      <div className="flex justify-center pb-10">
-        {Object.keys(chartCBMap).sort().map((c) => (
-          <label className="label cursor-pointer">
-            <span className="label-text pr-2">{chartCBMap[c as keyof typeof chartCBMap]}</span>
-            <input
-              type="checkbox"
-              className="checkbox"
-              name="chartDisplay"
-              value={c}
-              onChange={(e) => handleSelect(e)}
-            />
-          </label>
-        ))}
-        <label className="label cursor-pointer">
-          <span className="label-text pr-2">Probability:</span>
+    <>
+      {AVAILABLE_CHART_KEYS.map((k, i) => (
+        <label className="label cursor-default" key={i}>
+          <span className="label-text">
+            {LABEL_MAP[k as keyof typeof LABEL_MAP]}
+          </span>
           <input
             type="checkbox"
             className="checkbox"
-            name="chartDisplay"
-            value=""
-            onChange={(e) => console.log(e)}
+            value={k}
+            onChange={(e) => props.handleChartSelect(e)}
           />
         </label>
-      </div>
-    </div>
+      ))}
+
+      {/* COMING SOON */}
+      <label className="label cursor-default">
+        <span className="label-text">Probability</span>
+        <input type="checkbox" value="probability" className="checkbox" />
+      </label>
+    </>
   );
 };
 
