@@ -1,5 +1,4 @@
 const ThemeSelector = ({ ...props }) => {
-  console.log("Theme selector", props);
   return (
     <label className="flex cursor-pointer gap-2">
       <span className="label-text">Light</span>
