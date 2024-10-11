@@ -25,7 +25,7 @@ export default function Home() {
       .then((j) => {
         setData((oldData) => {
           const now = new Date();
-          let newData = {
+          const newData = {
             labels: [...oldData.labels, now.toLocaleString("en-US")],
             bitaxeData: {
               temp: [...oldData.bitaxeData.temp, j.temp],
@@ -63,11 +63,11 @@ export default function Home() {
 
       <div className="grid auto-cols-max grid-cols-2">
         {selectedCharts.map((c, i) => {
-          // TODO: This doesn't resize correctly when you pick more than 1 and go back to a single chart
           const useColSpan = i % 2 === 0 && i === selectedCharts.length - 1;
-          console.log(i, useColSpan);
+          // Don't use a completely random key...
+          const key = useColSpan ? i + 1 * 10 : i;
           return (
-            <div className={useColSpan ? "col-span-2" : ""}>
+            <div key={key} className={useColSpan ? "col-span-2" : ""}>
               <BitaxeLineChart
                 data={data}
                 target={c as keyof typeof data.bitaxeData}
