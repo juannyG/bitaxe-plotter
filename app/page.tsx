@@ -6,17 +6,11 @@ import BitaxeLineChart from "./_components/BitaxeLineChart";
 import ChartSelector from "./_components/ChartSelector";
 
 export default function Home() {
-  const chartNameMap = {
-    temp: "Temperature (C)",
-    hashRate: "Hash Rate (TH/s)",
-    power: "Power (W)",
-  };
+  const [selectedCharts, setSelectedCharts] = useState<string[]>([]);
   const [data, setData] = useState<ChartData>({
     labels: [],
     bitaxeData: { temp: [], hashRate: [], power: [] },
   });
-
-  const [selectedCharts, setSelectedCharts] = useState<string[]>([]);
 
   const getSystemInfo = async () => {
     // TODO: User inputs address of bitaxe(s)
@@ -51,6 +45,12 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, []);
+
+  const chartNameMap = {
+    temp: "Temperature (C)",
+    hashRate: "Hash Rate (TH/s)",
+    power: "Power (W)",
+  };
 
   // TODO: Need a way to have a "settings" component for configurations which feeds back into charts, etc
   // TODO: Add a way to turn off polling for updates

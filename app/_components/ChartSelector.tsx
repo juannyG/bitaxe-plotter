@@ -4,7 +4,7 @@ import { Dispatch, SetStateAction } from "react";
 
 const ChartSelector = ({
   selectedCharts,
-  setSelectedCharts
+  setSelectedCharts,
 }: {
   selectedCharts: string[];
   setSelectedCharts: Dispatch<SetStateAction<string[]>>;
@@ -21,8 +21,8 @@ const ChartSelector = ({
   const chartCBMap = {
     temp: "Temp",
     hashRate: "Hash rate",
-    power: "Power"
-  }
+    power: "Power",
+  };
 
   return (
     <div>
@@ -30,18 +30,23 @@ const ChartSelector = ({
         Please select which graphs you'd like to see:
       </div>
       <div className="flex justify-center pb-10">
-        {Object.keys(chartCBMap).sort().map((c) => (
-          <label className="label cursor-pointer">
-            <span className="label-text pr-2">{chartCBMap[c as keyof typeof chartCBMap]}</span>
-            <input
-              type="checkbox"
-              className="checkbox"
-              name="chartDisplay"
-              value={c}
-              onChange={(e) => handleSelect(e)}
-            />
-          </label>
-        ))}
+        {Object.keys(chartCBMap)
+          .sort()
+          .map((c, i) => (
+            <label className="label cursor-pointer" key={i}>
+              <span className="label-text pr-2">
+                {chartCBMap[c as keyof typeof chartCBMap]}
+              </span>
+              <input
+                key={i}
+                type="checkbox"
+                className="checkbox"
+                name="chartDisplay"
+                value={c}
+                onChange={(e) => handleSelect(e)}
+              />
+            </label>
+          ))}
         <label className="label cursor-pointer">
           <span className="label-text pr-2">Probability:</span>
           <input
