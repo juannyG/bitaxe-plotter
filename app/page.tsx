@@ -7,7 +7,6 @@ import {
   TEMP_KEY,
   HASH_RATE_KEY,
   POWER_KEY,
-  CHART_LABEL_MAP,
 } from "./_constants";
 import ChartView from "./_components/ChartView";
 
@@ -60,13 +59,13 @@ export default function Home() {
 
   return (
     <div className="w-4/5 pt-5">
-        {selectedCharts.length ? (
-          <ChartView data={data} />
-        ) : (
-          <div className="flex justify-center col-span-2">
-            Please select a chart to view.
-          </div>
-        )}
-      </div>
+      {selectedCharts.length ? (
+        <ChartView data={data} />
+      ) : (
+        <div className="flex justify-center col-span-2">
+          Please select a chart to view.
+        </div>
+      )}
+    </div>
   );
 }

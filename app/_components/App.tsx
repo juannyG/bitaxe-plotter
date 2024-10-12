@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import DrawerMenu from "./DrawerMenu";
 import { ChartSelectionContext, PollingContext } from "../_contexts";
+import BTCNetworkStats from "./BTCNetworkStats";
 
 const App = ({ children }: { children: React.ReactNode }) => {
   /* Setup theme conf so ThemeSelector in Drawer can communicate with `data-theme` element here */
@@ -42,14 +43,21 @@ const App = ({ children }: { children: React.ReactNode }) => {
                 </div>
               </label>
 
+              {/* BTC NETWORK STATS */}
+              <div className="flex justify-center pt-5 w-full">
+                <BTCNetworkStats />
+              </div>
+
               {/* TITLE */}
-              <div className="flex justify-center pt-10">
+              <div className="flex justify-center pt-5">
                 <h1 className="text-2xl">Bitaxe Stat Plotter</h1>
               </div>
 
               {/* MAIN CONTENT */}
               <main className="flex flex-col items-center h-full w-full">
-                <PollingContext.Provider value={{ pollingEnabled, setPollingEnabled}} >
+                <PollingContext.Provider
+                  value={{ pollingEnabled, setPollingEnabled }}
+                >
                   {children}
                 </PollingContext.Provider>
               </main>
