@@ -2,7 +2,7 @@ const DrawerMenuRow = ({ ...props }) => {
   return (
     <li className="border-b border-t border-neutral-400">
       <a>
-        <div className="collapse">
+        <div className="collapse collapse-plus">
           <input type="checkbox" />
           <div className="collapse-title text-xl font-medium">
             {props.title}

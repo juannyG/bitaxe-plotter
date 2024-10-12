@@ -2,3 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .table :where(th, td) {
+    padding-top: 0.10rem;
+    padding-bottom: 0.10rem;
+  }
+}

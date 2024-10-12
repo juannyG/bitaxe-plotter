@@ -43,14 +43,14 @@ const App = ({ children }: { children: React.ReactNode }) => {
                 </div>
               </label>
 
-              {/* TITLE */}
-              <div className="flex justify-center pt-10">
-                <h1 className="text-2xl">Bitaxe Stat Plotter</h1>
+              {/* BTC NETWORK STATS */}
+              <div className="flex justify-center pt-5 w-full">
+                <BTCNetworkStats />
               </div>
 
-              {/* BTC NETWORK STATS */}
-              <div className="flex justify-center">
-                <BTCNetworkStats />
+              {/* TITLE */}
+              <div className="flex justify-center pt-5">
+                <h1 className="text-2xl">Bitaxe Stat Plotter</h1>
               </div>
 
               {/* MAIN CONTENT */}
