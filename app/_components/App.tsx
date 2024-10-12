@@ -43,9 +43,14 @@ const App = ({ children }: { children: React.ReactNode }) => {
                 </div>
               </label>
 
-              {/* BTC NETWORK STATS */}
+              {/* BTC NETWORK HERO STATS */}
               <div className="flex justify-center pt-5 w-full">
                 <BTCNetworkStats />
+              </div>
+
+              {/* BITAXE HERO STATS */}
+              <div className="flex justify-center pt-5 w-full">
+                Bitaxe hero stats coming soon...
               </div>
 
               {/* TITLE */}
