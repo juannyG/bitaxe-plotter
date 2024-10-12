@@ -33,7 +33,7 @@ const App = ({ children }: { children: React.ReactNode }) => {
         <ChartSelectionContext.Provider
           value={{ selectedCharts, setSelectedCharts }}
         >
-          <div className="drawer">
+          <div className="drawer" data-theme={theme}>
             <input id="my-drawer" type="checkbox" className="drawer-toggle" />
             <div className="drawer-content">
               {/* Page content here */}
@@ -54,7 +54,7 @@ const App = ({ children }: { children: React.ReactNode }) => {
               </div>
 
               {/* MAIN CONTENT */}
-              <main className="flex flex-col items-center h-full w-full">
+              <main className="flex flex-col items-center w-full">
                 <PollingContext.Provider
                   value={{ pollingEnabled, setPollingEnabled }}
                 >
