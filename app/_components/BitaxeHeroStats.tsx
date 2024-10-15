@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { BitaxeHeroStatsContext } from "../_contexts";
 
 import HeroStatCell from "./HeroStatCell";
+import HeroStatTitle from "./HeroStatTitle";
 
 const buildUptimeDisplay = (uptimeSeconds: number) => {
   if (uptimeSeconds < 60) {
@@ -29,15 +30,12 @@ const BitaxeHeroStats = () => {
   const uptimeDisplay = bitaxeHeroStats.uptimeSeconds
     ? buildUptimeDisplay(bitaxeHeroStats.uptimeSeconds)
     : "";
-  console.log(bitaxeHeroStats);
 
   return (
     <div className="flex self-stretch justify-center items-center">
       <div>
-        <div className="flex justify-center items-center">
-          Bitaxe Hero Stats
-        </div>
-        <div className="stats shadow pt-5">
+        <HeroStatTitle title="Bitaxe Hero Stats" />
+        <div className="stats shadow">
           <HeroStatCell title="Name" value={bitaxeHeroStats.stratumUser} />
           <HeroStatCell title="Best diff" value={bitaxeHeroStats.bestDiff} />
           <HeroStatCell
