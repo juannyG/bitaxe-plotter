@@ -49,7 +49,7 @@ const BTCNetworkStats = () => {
   }, [nextUpdate]);
 
   return (
-    <div>
+    <>
       <div className="collapse collapse-arrow bg-base-200">
         <input type="checkbox" name="btc-network-stats" />
         <div className="collapse-title text-xl font-medium">
@@ -82,7 +82,7 @@ const BTCNetworkStats = () => {
           </table>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

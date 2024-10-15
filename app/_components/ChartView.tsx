@@ -2,9 +2,10 @@ import { useContext } from "react";
 
 import { CHART_LABEL_MAP } from "../_constants";
 import { ChartSelectionContext, PollingContext } from "../_contexts";
-import BitaxeLineChart, { ChartData } from "./BitaxeLineChart";
+import BitaxeLineChart from "./BitaxeLineChart";
+import { TChartData } from "../_types";
 
-const ChartView = ({ data }: { data: ChartData }) => {
+const ChartView = ({ data }: { data: TChartData }) => {
   const { selectedCharts } = useContext(ChartSelectionContext);
   const { pollingEnabled, setPollingEnabled } = useContext(PollingContext);
 

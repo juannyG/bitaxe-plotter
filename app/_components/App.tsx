@@ -1,9 +1,24 @@
 "use client";
 
 import { useState, useEffect } from "react";
+
+import {
+  ChartSelectionContext,
+  PollingContext,
+  BitaxeChartDataContext,
+  BitaxeHeroStatsContext,
+} from "../_contexts";
+import { TBitaxeHeroStats, TChartData } from "../_types";
+import {
+  TEMP_KEY,
+  HASH_RATE_KEY,
+  POWER_KEY,
+  EFFICIENCY_KEY,
+} from "../_constants";
 import DrawerMenu from "./DrawerMenu";
-import { ChartSelectionContext, PollingContext } from "../_contexts";
 import BTCNetworkStats from "./BTCNetworkStats";
+import BitaxeHeroStats from "./BitaxeHeroStats";
+import getSystemInfo from "./_utils/getSystemInfo";
 
 const App = ({ children }: { children: React.ReactNode }) => {
   /* Setup theme conf so ThemeSelector in Drawer can communicate with `data-theme` element here */
@@ -22,6 +37,35 @@ const App = ({ children }: { children: React.ReactNode }) => {
   /* Setup chart conf so ChartSelector in Drawer can communicate with Charts in {children} under <main> */
   const [selectedCharts, setSelectedCharts] = useState<string[]>([]);
   const [pollingEnabled, setPollingEnabled] = useState<boolean>(true);
+  const [bitaxeHeroStats, setBitaxeHeroStats] = useState<TBitaxeHeroStats>({
+    bestDiff: "",
+    bestSessionDiff: "",
+    stratumUser: "",
+    wifiStatus: "",
+    sharesAccepted: 0,
+    sharesRejected: 0,
+    uptimeSeconds: 0,
+  });
+  const [chartData, setChartData] = useState<TChartData>({
+    labels: [],
+    bitaxeData: {
+      [TEMP_KEY]: [],
+      [HASH_RATE_KEY]: [],
+      [POWER_KEY]: [],
+      [EFFICIENCY_KEY]: [],
+    },
+  });
+
+  useEffect(() => {
+    getSystemInfo(pollingEnabled, setChartData, setBitaxeHeroStats);
+
+    // TODO: Configurable refresh rate
+    const interval = setInterval(() => {
+      getSystemInfo(pollingEnabled, setChartData, setBitaxeHeroStats);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [pollingEnabled]);
 
   return (
     <>
@@ -43,24 +87,41 @@ const App = ({ children }: { children: React.ReactNode }) => {
                 </div>
               </label>
 
-              {/* BTC NETWORK STATS */}
-              <div className="flex justify-center pt-5 w-full">
-                <BTCNetworkStats />
-              </div>
+              <BitaxeChartDataContext.Provider
+                value={{ chartData, setChartData }}
+              >
+                <div className="flex items-center justify-center">
+                  <div className="grid">
+                    <div className="relative">
+                      {/* BTC NETWORK HERO STATS */}
+                      <div className="flex justify-center pt-5 w-full">
+                        <BTCNetworkStats />
+                      </div>
 
-              {/* TITLE */}
-              <div className="flex justify-center pt-5">
-                <h1 className="text-2xl">Bitaxe Stat Plotter</h1>
-              </div>
+                      <div className="flex justify-center pt-5 w-full">
+                        <BitaxeHeroStatsContext.Provider
+                          value={bitaxeHeroStats}
+                        >
+                          <BitaxeHeroStats />
+                        </BitaxeHeroStatsContext.Provider>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* TITLE */}
+                <div className="flex justify-center pt-5">
+                  <h1 className="text-2xl">Bitaxe Stat Plotter</h1>
+                </div>
 
-              {/* MAIN CONTENT */}
-              <main className="flex flex-col items-center w-full">
-                <PollingContext.Provider
-                  value={{ pollingEnabled, setPollingEnabled }}
-                >
-                  {children}
-                </PollingContext.Provider>
-              </main>
+                {/* MAIN CONTENT */}
+                <main className="flex flex-col items-center w-full">
+                  <PollingContext.Provider
+                    value={{ pollingEnabled, setPollingEnabled }}
+                  >
+                    {children}
+                  </PollingContext.Provider>
+                </main>
+              </BitaxeChartDataContext.Provider>
             </div>
 
             {/* CONFIGURATIONS */}

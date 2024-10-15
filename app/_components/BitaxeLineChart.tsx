@@ -4,27 +4,16 @@ import Chart from "chart.js/auto";
 import { Line } from "react-chartjs-2";
 import { CategoryScale } from "chart.js";
 
-import { TEMP_KEY, HASH_RATE_KEY, POWER_KEY } from "../_constants";
+import { TChartData } from "../_types";
 
 Chart.register(CategoryScale);
-
-export type BitaxeData = {
-  [TEMP_KEY]: number[];
-  [HASH_RATE_KEY]: number[];
-  [POWER_KEY]: number[];
-};
-
-export type ChartData = {
-  labels: string[];
-  bitaxeData: BitaxeData;
-};
 
 const BitaxeLineChart = ({
   data,
   target,
   label,
 }: {
-  data: ChartData;
+  data: TChartData;
   target: keyof typeof data.bitaxeData;
   label: string;
 }) => {
