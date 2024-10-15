@@ -9,7 +9,7 @@ import {
   BitaxeHeroStatsContext,
 } from "../_contexts";
 import { TBitaxeHeroStats, TChartData } from "../_types";
-import { TEMP_KEY, HASH_RATE_KEY, POWER_KEY } from "../_constants";
+import { TEMP_KEY, HASH_RATE_KEY, POWER_KEY, FANRPM_KEY } from "../_constants";
 import DrawerMenu from "./DrawerMenu";
 import HeroStatsContainer from "./HeroStatsContainer";
 import getSystemInfo from "./_utils/getSystemInfo";
@@ -44,6 +44,7 @@ const App = ({ children }: { children: React.ReactNode }) => {
       [TEMP_KEY]: [],
       [HASH_RATE_KEY]: [],
       [POWER_KEY]: [],
+      [FANRPM_KEY]: [],
     },
   });
 

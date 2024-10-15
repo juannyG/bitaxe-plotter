@@ -40,6 +40,11 @@ const BitaxeLineChart = ({
             },
           },
         },
+        elements: {
+          point: {
+            radius: 2
+          }
+        }
       }}
     />
   );
