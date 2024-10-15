@@ -9,12 +9,7 @@ import {
   BitaxeHeroStatsContext,
 } from "../_contexts";
 import { TBitaxeHeroStats, TChartData } from "../_types";
-import {
-  TEMP_KEY,
-  HASH_RATE_KEY,
-  POWER_KEY,
-  EFFICIENCY_KEY,
-} from "../_constants";
+import { TEMP_KEY, HASH_RATE_KEY, POWER_KEY } from "../_constants";
 import DrawerMenu from "./DrawerMenu";
 import BTCNetworkStats from "./BTCNetworkStats";
 import BitaxeHeroStats from "./BitaxeHeroStats";
@@ -42,8 +37,6 @@ const App = ({ children }: { children: React.ReactNode }) => {
     bestSessionDiff: "",
     stratumUser: "",
     wifiStatus: "",
-    sharesAccepted: 0,
-    sharesRejected: 0,
     uptimeSeconds: 0,
   });
   const [chartData, setChartData] = useState<TChartData>({
@@ -52,7 +45,6 @@ const App = ({ children }: { children: React.ReactNode }) => {
       [TEMP_KEY]: [],
       [HASH_RATE_KEY]: [],
       [POWER_KEY]: [],
-      [EFFICIENCY_KEY]: [],
     },
   });
 
