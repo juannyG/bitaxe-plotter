@@ -9,7 +9,12 @@ import {
   BitaxeHeroStatsContext,
 } from "../_contexts";
 import { TBitaxeHeroStats, TChartData } from "../_types";
-import { TEMP_KEY, HASH_RATE_KEY, POWER_KEY } from "../_constants";
+import {
+  TEMP_KEY,
+  HASH_RATE_KEY,
+  POWER_KEY,
+  EFFICIENCY_KEY,
+} from "../_constants";
 import DrawerMenu from "./DrawerMenu";
 import BTCNetworkStats from "./BTCNetworkStats";
 import BitaxeHeroStats from "./BitaxeHeroStats";
@@ -43,7 +48,12 @@ const App = ({ children }: { children: React.ReactNode }) => {
   });
   const [chartData, setChartData] = useState<TChartData>({
     labels: [],
-    bitaxeData: { [TEMP_KEY]: [], [HASH_RATE_KEY]: [], [POWER_KEY]: [] },
+    bitaxeData: {
+      [TEMP_KEY]: [],
+      [HASH_RATE_KEY]: [],
+      [POWER_KEY]: [],
+      [EFFICIENCY_KEY]: [],
+    },
   });
 
   useEffect(() => {

@@ -1,6 +1,11 @@
 import { createContext } from "react";
 
-import { TEMP_KEY, HASH_RATE_KEY, POWER_KEY } from "./_constants";
+import {
+  TEMP_KEY,
+  HASH_RATE_KEY,
+  POWER_KEY,
+  EFFICIENCY_KEY,
+} from "./_constants";
 import { TBitaxeHeroStats, TChartData } from "./_types";
 
 interface IChartSelection {
@@ -32,6 +37,7 @@ export const BitaxeChartDataContext = createContext<IBitaxeChartData>({
       [TEMP_KEY]: [],
       [HASH_RATE_KEY]: [],
       [POWER_KEY]: [],
+      [EFFICIENCY_KEY]: [],
     },
   },
   setChartData: () => {},

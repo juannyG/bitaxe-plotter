@@ -4,7 +4,7 @@ import Chart from "chart.js/auto";
 import { Line } from "react-chartjs-2";
 import { CategoryScale } from "chart.js";
 
-import { ChartData } from "../_types";
+import { TChartData } from "../_types";
 
 Chart.register(CategoryScale);
 
@@ -13,7 +13,7 @@ const BitaxeLineChart = ({
   target,
   label,
 }: {
-  data: ChartData;
+  data: TChartData;
   target: keyof typeof data.bitaxeData;
   label: string;
 }) => {
