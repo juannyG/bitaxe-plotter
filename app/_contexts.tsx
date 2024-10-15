@@ -4,7 +4,7 @@ import {
   TEMP_KEY,
   HASH_RATE_KEY,
   POWER_KEY,
-  EFFICIENCY_KEY,
+  FANRPM_KEY,
 } from "./_constants";
 import { TBitaxeHeroStats, TChartData } from "./_types";
 
@@ -37,6 +37,7 @@ export const BitaxeChartDataContext = createContext<IBitaxeChartData>({
       [TEMP_KEY]: [],
       [HASH_RATE_KEY]: [],
       [POWER_KEY]: [],
+      [FANRPM_KEY]: [],
     },
   },
   setChartData: () => {},

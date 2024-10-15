@@ -1,3 +1,4 @@
+import { TEMP_KEY, HASH_RATE_KEY, POWER_KEY, FANRPM_KEY } from "@/app/_constants";
 import { TChartData, TBitaxeHeroStats } from "@/app/_types";
 
 const getSystemInfo = async (
@@ -24,9 +25,10 @@ const getSystemInfo = async (
         const newData = {
           labels: [...oldData.labels, now.toLocaleString("en-US")],
           bitaxeData: {
-            temp: [...oldData.bitaxeData.temp, j.temp],
-            hashRate: [...oldData.bitaxeData.hashRate, j.hashRate / 1000],
-            power: [...oldData.bitaxeData.power, j.power],
+            [TEMP_KEY]: [...oldData.bitaxeData.temp, j.temp],
+            [HASH_RATE_KEY]: [...oldData.bitaxeData.hashRate, j.hashRate / 1000],
+            [POWER_KEY]: [...oldData.bitaxeData.power, j.power],
+            [FANRPM_KEY]: [...oldData.bitaxeData.fanrpm, j.fanrpm],
           },
         };
         return newData;
