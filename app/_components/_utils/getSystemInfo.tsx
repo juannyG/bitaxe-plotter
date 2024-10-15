@@ -27,10 +27,6 @@ const getSystemInfo = async (
             temp: [...oldData.bitaxeData.temp, j.temp],
             hashRate: [...oldData.bitaxeData.hashRate, j.hashRate / 1000],
             power: [...oldData.bitaxeData.power, j.power],
-            efficiency: [
-              ...oldData.bitaxeData.efficiency,
-              j.power / (j.hashRate / 1000),
-            ],
           },
         };
         return newData;

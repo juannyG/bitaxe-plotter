@@ -6,7 +6,9 @@ import { ChartSelectionContext } from "../_contexts";
 import { AVAILABLE_CHART_KEYS, LABEL_MAP } from "../_constants";
 
 const ChartSelector = () => {
-  const { selectedCharts, setSelectedCharts } = useContext(ChartSelectionContext);
+  const { selectedCharts, setSelectedCharts } = useContext(
+    ChartSelectionContext,
+  );
   const handleChartSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target as HTMLInputElement;
     if (checked === true) {
@@ -31,12 +33,6 @@ const ChartSelector = () => {
           />
         </label>
       ))}
-
-      {/* COMING SOON */}
-      <label className="label cursor-default">
-        <span className="label-text">Probability</span>
-        <input type="checkbox" value="probability" className="checkbox" />
-      </label>
     </>
   );
 };

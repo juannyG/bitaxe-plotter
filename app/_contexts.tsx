@@ -37,7 +37,6 @@ export const BitaxeChartDataContext = createContext<IBitaxeChartData>({
       [TEMP_KEY]: [],
       [HASH_RATE_KEY]: [],
       [POWER_KEY]: [],
-      [EFFICIENCY_KEY]: [],
     },
   },
   setChartData: () => {},
@@ -48,7 +47,5 @@ export const BitaxeHeroStatsContext = createContext<TBitaxeHeroStats>({
   bestSessionDiff: "",
   stratumUser: "",
   wifiStatus: "",
-  sharesAccepted: 0,
-  sharesRejected: 0,
   uptimeSeconds: 0,
 });
