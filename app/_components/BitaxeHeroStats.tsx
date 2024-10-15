@@ -2,6 +2,8 @@ import { useContext } from "react";
 
 import { BitaxeHeroStatsContext } from "../_contexts";
 
+import HeroStatCell from "./HeroStatCell";
+
 const buildUptimeDisplay = (uptimeSeconds: number) => {
   if (uptimeSeconds < 60) {
     // Seconds
@@ -26,38 +28,26 @@ const BitaxeHeroStats = () => {
   const bitaxeHeroStats = useContext(BitaxeHeroStatsContext);
   const uptimeDisplay = bitaxeHeroStats.uptimeSeconds
     ? buildUptimeDisplay(bitaxeHeroStats.uptimeSeconds)
-    : "Loading...";
+    : "";
   console.log(bitaxeHeroStats);
 
   return (
-    <>
-      <div className="collapse collapse-arrow bg-base-200">
-        <input type="checkbox" name="bitaxe-hero-stats" />
-        <div className="collapse-title text-xl font-medium">
+    <div className="flex self-stretch justify-center items-center">
+      <div>
+        <div className="flex justify-center items-center">
           Bitaxe Hero Stats
         </div>
-        <div className="collapse-content">
-          <table className="table text-center">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>All time best diff</th>
-                <th>Best diff since boot</th>
-                <th>Uptime (min)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{bitaxeHeroStats.stratumUser}</td>
-                <td>{bitaxeHeroStats.bestDiff}</td>
-                <td>{bitaxeHeroStats.bestSessionDiff}</td>
-                <td>{uptimeDisplay}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="stats shadow pt-5">
+          <HeroStatCell title="Name" value={bitaxeHeroStats.stratumUser} />
+          <HeroStatCell title="Best diff" value={bitaxeHeroStats.bestDiff} />
+          <HeroStatCell
+            title="Best session diff"
+            value={bitaxeHeroStats.bestSessionDiff}
+          />
+          <HeroStatCell title="Uptime" value={uptimeDisplay} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

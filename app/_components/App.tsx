@@ -9,15 +9,9 @@ import {
   BitaxeHeroStatsContext,
 } from "../_contexts";
 import { TBitaxeHeroStats, TChartData } from "../_types";
-import {
-  TEMP_KEY,
-  HASH_RATE_KEY,
-  POWER_KEY,
-  EFFICIENCY_KEY,
-} from "../_constants";
+import { TEMP_KEY, HASH_RATE_KEY, POWER_KEY } from "../_constants";
 import DrawerMenu from "./DrawerMenu";
-import BTCNetworkStats from "./BTCNetworkStats";
-import BitaxeHeroStats from "./BitaxeHeroStats";
+import HeroStatsContainer from "./HeroStatsContainer";
 import getSystemInfo from "./_utils/getSystemInfo";
 
 const App = ({ children }: { children: React.ReactNode }) => {
@@ -42,8 +36,6 @@ const App = ({ children }: { children: React.ReactNode }) => {
     bestSessionDiff: "",
     stratumUser: "",
     wifiStatus: "",
-    sharesAccepted: 0,
-    sharesRejected: 0,
     uptimeSeconds: 0,
   });
   const [chartData, setChartData] = useState<TChartData>({
@@ -52,7 +44,6 @@ const App = ({ children }: { children: React.ReactNode }) => {
       [TEMP_KEY]: [],
       [HASH_RATE_KEY]: [],
       [POWER_KEY]: [],
-      [EFFICIENCY_KEY]: [],
     },
   });
 
@@ -90,24 +81,10 @@ const App = ({ children }: { children: React.ReactNode }) => {
               <BitaxeChartDataContext.Provider
                 value={{ chartData, setChartData }}
               >
-                <div className="flex items-center justify-center">
-                  <div className="grid">
-                    <div className="relative">
-                      {/* BTC NETWORK HERO STATS */}
-                      <div className="flex justify-center pt-5 w-full">
-                        <BTCNetworkStats />
-                      </div>
+                <BitaxeHeroStatsContext.Provider value={bitaxeHeroStats}>
+                  <HeroStatsContainer />
+                </BitaxeHeroStatsContext.Provider>
 
-                      <div className="flex justify-center pt-5 w-full">
-                        <BitaxeHeroStatsContext.Provider
-                          value={bitaxeHeroStats}
-                        >
-                          <BitaxeHeroStats />
-                        </BitaxeHeroStatsContext.Provider>
-                      </div>
-                    </div>
-                  </div>
-                </div>
                 {/* TITLE */}
                 <div className="flex justify-center pt-5">
                   <h1 className="text-2xl">Bitaxe Stat Plotter</h1>

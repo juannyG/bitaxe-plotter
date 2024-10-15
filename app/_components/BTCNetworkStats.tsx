@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 
+import HeroStatCell from "./HeroStatCell";
+
 const BTCNetworkStats = () => {
   const [nextUpdate, setNextUpdate] = useState("");
-  const [blockHeight, setBlockHeight] = useState("...");
+  const [blockHeight, setBlockHeight] = useState("");
   useEffect(() => {
     fetch("https://mempool.space/api/blocks/tip/height")
       .then((r) => r.json())
@@ -16,13 +18,20 @@ const BTCNetworkStats = () => {
       });
   }, [nextUpdate]);
 
-  const [currDiff, setCurrDiff] = useState("...");
+  const [networkHash, setNetworkHash] = useState("");
+  const [currDiff, setCurrDiff] = useState("");
   useEffect(() => {
-    fetch("https://mempool.space/api/v1/mining/difficulty-adjustments/1m")
+    fetch("https://mempool.space/api/v1/mining/hashrate/3d")
       .then((r) => r.json())
       .then((data) => {
-        const newCurrDiff = (data[0][2] / 10 ** 12).toFixed(4) + " T";
+        const newCurrDiff =
+          (data.currentDifficulty / 10 ** 12).toFixed(4) + " T";
         setCurrDiff(newCurrDiff);
+
+        const newNetworkHash =
+          (data.currentHashrate / 10 ** 18).toFixed(4) + " EH/s";
+        setNetworkHash(newNetworkHash);
+        console.log(newNetworkHash);
       })
       .catch((e) => {
         console.log(e);
@@ -44,45 +53,28 @@ const BTCNetworkStats = () => {
     setRemaining({ m: m.toFixed(0), s: s.toFixed(0) });
   };
   useEffect(() => {
+    tick();
     const interval = setInterval(() => tick(), 1000);
     return () => clearInterval(interval);
   }, [nextUpdate]);
 
+  const remainingDisplay = remaining
+    ? remaining.m + "min, " + remaining.s + "s"
+    : "";
   return (
-    <>
-      <div className="collapse collapse-arrow bg-base-200">
-        <input type="checkbox" name="btc-network-stats" />
-        <div className="collapse-title text-xl font-medium">
-          Current BTC Network Stats
+    <div className="flex self-stretch justify-center items-center">
+      <div>
+        <div className="flex justify-center items-center">
+          BTC Network Stats
         </div>
-        <div className="collapse-content">
-          <table className="table text-center">
-            <thead>
-              <tr>
-                <th>Block Height</th>
-                <th>Current Diff</th>
-                <th>Next Update</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{blockHeight}</td>
-                <td>{currDiff}</td>
-                <td>
-                  {remaining.m ? (
-                    <>
-                      {remaining.m} min, {remaining.s} s
-                    </>
-                  ) : (
-                    "Loading..."
-                  )}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="stats shadow pt-5">
+          <HeroStatCell title="Block Height" value={blockHeight} />
+          <HeroStatCell title="Current Difficulty" value={currDiff} />
+          <HeroStatCell title="Network Hash Rate" value={networkHash} />
+          <HeroStatCell title="Next Update" value={remainingDisplay} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
