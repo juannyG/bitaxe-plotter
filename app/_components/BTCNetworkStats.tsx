@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 
 import HeroStatCell from "./HeroStatCell";
+import HeroStatTitle from "./HeroStatTitle";
 
 const BTCNetworkStats = () => {
   const [nextUpdate, setNextUpdate] = useState("");
@@ -25,13 +26,12 @@ const BTCNetworkStats = () => {
       .then((r) => r.json())
       .then((data) => {
         const newCurrDiff =
-          (data.currentDifficulty / 10 ** 12).toFixed(4) + " T";
+          (data.currentDifficulty / 10 ** 12).toFixed(3) + " T";
         setCurrDiff(newCurrDiff);
 
         const newNetworkHash =
-          (data.currentHashrate / 10 ** 18).toFixed(4) + " EH/s";
+          (data.currentHashrate / 10 ** 18).toFixed(3) + " EH/s";
         setNetworkHash(newNetworkHash);
-        console.log(newNetworkHash);
       })
       .catch((e) => {
         console.log(e);
@@ -64,10 +64,8 @@ const BTCNetworkStats = () => {
   return (
     <div className="flex self-stretch justify-center items-center">
       <div>
-        <div className="flex justify-center items-center">
-          BTC Network Stats
-        </div>
-        <div className="stats shadow pt-5">
+        <HeroStatTitle title="BTC Network Stats" />
+        <div className="stats shadow">
           <HeroStatCell title="Block Height" value={blockHeight} />
           <HeroStatCell title="Current Difficulty" value={currDiff} />
           <HeroStatCell title="Network Hash Rate" value={networkHash} />
