@@ -6,23 +6,31 @@ import HeroStatCell from "./HeroStatCell";
 import HeroStatTitle from "./HeroStatTitle";
 
 const buildUptimeDisplay = (uptimeSeconds: number) => {
-  if (uptimeSeconds < 60) {
+  const day = 86400;
+  const hour = 3600;
+  const minute = 60;
+
+  if (uptimeSeconds < minute) {
     // Seconds
     return uptimeSeconds.toString() + "s";
-  } else if (uptimeSeconds < 60 * 60) {
+  } else if (uptimeSeconds < hour) {
     // Minutes
-    const m = Math.floor(uptimeSeconds / 60);
-    const s = uptimeSeconds - m * 60;
+    const m = Math.floor(uptimeSeconds / minute);
+    const s = uptimeSeconds - m * minute;
     return m.toFixed(0) + "min, " + s.toString() + "s";
-  } else if (uptimeSeconds < 60 * 60 * 24) {
+  } else if (uptimeSeconds < day) {
     // Hours
-    const h = Math.floor(uptimeSeconds / 3600);
-    const m = Math.floor((uptimeSeconds - h * 3600) / 60);
-    const s = uptimeSeconds - h * 3600 - m * 60;
+    const h = Math.floor(uptimeSeconds / hour);
+    const m = Math.floor((uptimeSeconds - h * hour) / minute);
+    const s = uptimeSeconds - h * hour - m * minute;
     return h.toString() + "hr, " + m.toString() + "min, " + s + "s";
   }
   // Days
-  return uptimeSeconds.toString() + " but in days";
+  const d = Math.floor(uptimeSeconds / day);
+  const h = Math.floor((uptimeSeconds - d * day) / hour);
+  const m = Math.floor((uptimeSeconds - d * day - h * hour) / minute);
+  const s = uptimeSeconds - d * day - h * hour - m * minute;
+  return d.toString() + "d, " + h + "hr, " + m + "min, " + s + "s";
 };
 
 const BitaxeHeroStats = () => {
