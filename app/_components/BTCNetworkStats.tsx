@@ -65,7 +65,7 @@ const BTCNetworkStats = () => {
     <div className="flex self-stretch justify-center items-center">
       <div>
         <HeroStatTitle title="BTC Network Stats" />
-        <div className="stats shadow">
+        <div className="stats stats-vertical lg:stats-horizontal shadow">
           <HeroStatCell title="Block Height" value={blockHeight} />
           <HeroStatCell title="Current Difficulty" value={currDiff} />
           <HeroStatCell title="Network Hash Rate" value={networkHash} />
