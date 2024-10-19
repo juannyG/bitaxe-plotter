@@ -9,13 +9,10 @@ const ChartView = ({ data }: { data: TChartData }) => {
   const { selectedCharts } = useContext(ChartSelectionContext);
 
   return (
-    <div className="grid auto-cols-max grid-cols-2">
+    <div className="grid auto-cols-min grid-cols-1 lg:grid-cols-2 pl-10">
       {selectedCharts.map((c, i) => {
-        const useColSpan = i % 2 === 0 && i === selectedCharts.length - 1;
-        // Don't use a completely random key...
-        const key = useColSpan ? i + 1 * 10 : i;
         return (
-          <div key={key} className={useColSpan ? "col-span-2" : ""}>
+          <div key={i} className="relative md:min-h-96">
             <BitaxeLineChart
               data={data}
               target={c as keyof typeof data.bitaxeData}
