@@ -29,6 +29,7 @@ const BitaxeLineChart = ({
         ],
       }}
       options={{
+        maintainAspectRatio: false,
         scales: {
           x: {
             ticks: {

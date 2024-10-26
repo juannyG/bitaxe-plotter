@@ -43,7 +43,7 @@ const BitaxeHeroStats = () => {
     <div className="flex self-stretch justify-center items-center">
       <div>
         <HeroStatTitle title="Bitaxe Hero Stats" />
-        <div className="stats shadow">
+        <div className="stats stats-vertical lg:stats-horizontal shadow">
           <HeroStatCell title="Name" value={bitaxeHeroStats.stratumUser} />
           <HeroStatCell title="Best diff" value={bitaxeHeroStats.bestDiff} />
           <HeroStatCell

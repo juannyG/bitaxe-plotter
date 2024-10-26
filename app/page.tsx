@@ -9,7 +9,7 @@ export default function Home() {
   const { chartData } = useContext(BitaxeChartDataContext);
 
   return (
-    <div className="w-4/5 pt-5">
+    <div className="w-full sm:w-4/6 h-full pt-5">
       {selectedCharts.length ? (
         <ChartView data={chartData} />
       ) : (
