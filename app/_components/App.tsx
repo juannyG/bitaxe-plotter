@@ -72,23 +72,27 @@ const App = ({ children }: { children: React.ReactNode }) => {
           <PollingContext.Provider
             value={{ pollingEnabled, setPollingEnabled }}
           >
-            <div className="drawer" data-theme={theme}>
-              <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-              <div className="drawer-content">
-                <label htmlFor="my-drawer" className="drawer-button">
-                  <div className="visible h-dvh fixed border-r p-5 drawer-button cursor-pointer border-neutral-800">
-                    {">>"}
+            <BitaxeChartDataContext.Provider
+              value={{ chartData, setChartData }}
+            >
+              <div className="drawer" data-theme={theme}>
+                <input
+                  id="my-drawer"
+                  type="checkbox"
+                  className="drawer-toggle"
+                />
+                <div className="drawer-content">
+                  <label htmlFor="my-drawer" className="drawer-button">
+                    <div className="visible h-dvh fixed border-r p-5 drawer-button cursor-pointer border-neutral-800">
+                      {">>"}
+                    </div>
+                  </label>
+
+                  {/* TITLE */}
+                  <div className="flex justify-center pt-5">
+                    <h1 className="text-2xl">Bitaxe Stat Plotter</h1>
                   </div>
-                </label>
 
-                {/* TITLE */}
-                <div className="flex justify-center pt-5">
-                  <h1 className="text-2xl">Bitaxe Stat Plotter</h1>
-                </div>
-
-                <BitaxeChartDataContext.Provider
-                  value={{ chartData, setChartData }}
-                >
                   <BitaxeHeroStatsContext.Provider value={bitaxeHeroStats}>
                     <HeroStatsContainer />
                   </BitaxeHeroStatsContext.Provider>
@@ -97,15 +101,15 @@ const App = ({ children }: { children: React.ReactNode }) => {
                   <main className="flex flex-col items-center w-full">
                     {children}
                   </main>
-                </BitaxeChartDataContext.Provider>
-              </div>
+                </div>
 
-              {/* CONFIGURATIONS */}
-              <DrawerMenu
-                selectedTheme={theme}
-                selectNewTheme={selectNewTheme}
-              />
-            </div>
+                {/* CONFIGURATIONS */}
+                <DrawerMenu
+                  selectedTheme={theme}
+                  selectNewTheme={selectNewTheme}
+                />
+              </div>
+            </BitaxeChartDataContext.Provider>
           </PollingContext.Provider>
         </ChartSelectionContext.Provider>
       </div>
