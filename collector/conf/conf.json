@@ -1,0 +1,7 @@
+{
+  "miners": [{
+      "name": "test",
+      "statSource": "axeos",
+      "address": "10.0.0.244"
+  }]
+}
