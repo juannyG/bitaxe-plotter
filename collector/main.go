@@ -7,7 +7,8 @@ import (
 	"miner-stats/collector/collectors"
 	"miner-stats/collector/conf"
 	"os"
-	"time"
+	"os/signal"
+	"sync"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -18,7 +19,23 @@ func main() {
 	var debug bool
 	var test bool
 	var minerIdx int
+
 	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt, os.Kill)
+	defer func() {
+		signal.Stop(c)
+		cancel()
+	}()
+
+	go func() {
+		select {
+		case <-c:
+			cancel()
+		case <-ctx.Done():
+		}
+	}()
 
 	flag.StringVar(&confFilePath, "conf", "", "Path to collector configuration")
 	flag.BoolVar(&debug, "debug", false, "Enable debug level logging")
@@ -48,19 +65,23 @@ func main() {
 		logger.Debug("Miner argument less than 0. Ignoring...")
 	}
 
+	var wg sync.WaitGroup
 	fmt.Println("Configuration successfully loaded. Initializing collectors...")
-	// TODO: WaitGroup
 	for i := 0; i < len(config.Miners); i++ {
 		switch config.Miners[i].StatSource {
 		case conf.AxeOS:
 			logger.Debug("TODO: Implement AxeOS collection worker")
 		case conf.CGMiner:
-			go collectors.CGMinerWorker(ctx, &config.Miners[i], test, logger)
+			wg.Add(1)
+			go func(c *conf.MinerConfig) {
+				defer wg.Done()
+				collectors.CGMinerWorker(ctx, c, test, logger)
+			}(&config.Miners[i])
 		default:
 			logger.Fatal("Unsupported stat source detected", zap.String("statSource", config.Miners[i].StatSource))
 		}
 	}
+	wg.Wait()
 
-	// TODO: Trap SIGTERM/SIGINT for clean shutdown through context
-	time.Sleep(1 * time.Millisecond)
+	fmt.Println("All collectors have terminated. Exiting...")
 }
