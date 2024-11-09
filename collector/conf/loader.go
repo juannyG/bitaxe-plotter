@@ -26,6 +26,10 @@ type Config struct {
 }
 
 func (c *Config) validate() error {
+	if len(c.Miners) == 0 {
+		return errors.New("No miner configurations found")
+	}
+
 	for i := 0; i < len(c.Miners); i++ {
 		// Normalize and overwrite before checking
 		statSource := strings.ToLower(c.Miners[i].StatSource)

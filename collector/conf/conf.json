@@ -1,7 +1,14 @@
 {
-  "miners": [{
-      "name": "test",
-      "statSource": "axeos",
-      "address": "10.0.0.244"
-  }]
+  "miners": [
+      {
+          "name": "bitaxe.gamma[0]",
+          "statSource": "axeos",
+          "address": "10.0.0.244"
+      },
+      {
+          "name": "gekkosci.r909[0]",
+          "statSource": "cgminer",
+          "address": "10.0.0.216:4028"
+      }
+  ]
 }
