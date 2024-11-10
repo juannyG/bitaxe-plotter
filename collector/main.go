@@ -4,8 +4,8 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"miner-stats/collector/collectors"
 	"miner-stats/collector/conf"
+	"miner-stats/collector/statTypes/cgminer"
 	"os"
 	"os/signal"
 	"sync"
@@ -75,7 +75,7 @@ func main() {
 			wg.Add(1)
 			go func(c *conf.MinerConfig) {
 				defer wg.Done()
-				collectors.CGMinerWorker(ctx, c, test, logger)
+				cgminer.CGMinerWorker(ctx, c, test, logger)
 			}(&config.Miners[i])
 		default:
 			logger.Fatal("Unsupported stat source detected", zap.String("statSource", config.Miners[i].StatSource))
