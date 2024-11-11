@@ -16,9 +16,9 @@ type CGConnector struct {
 }
 
 func (cg *CGConnector) executeCmd(cmd string) (data []byte) {
-	conn, err := net.Dial("tcp", cg.miner.Address)
+	conn, err := net.Dial("tcp", cg.miner.Host)
 	if err != nil {
-		cg.logger.Fatal("Failed to connect to miner", zap.String("miner.Address", cg.miner.Address))
+		cg.logger.Fatal("Failed to connect to miner", zap.String("miner.Address", cg.miner.Host))
 	}
 	defer conn.Close()
 

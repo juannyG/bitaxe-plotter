@@ -3,26 +3,24 @@ package conf
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"os"
-	"strings"
 
 	"go.uber.org/zap"
 )
 
-const (
-	AxeOS   string = "axeos"
-	CGMiner string = "cgminer"
-)
-
-type MinerConfig struct {
-	Name       string `json:"name"`
-	StatSource string `json:"statSource"`
-	Address    string `json:"address"`
-}
-
 type Config struct {
 	Miners []MinerConfig `json:"miners"`
+
+	/**
+	     Marshal the StoreConfs to structs manually based on "type" field
+	     and assign the appropriate instance to MinerConfig[x].Store
+
+		 storeLabel: { ..., type: "storeType" }
+	*/
+	StoreConfs map[string]interface{} `json:"stores"`
+
+	// We load StoreConfs into a map of stores for easy retrieval when repeated
+	stores map[string]Store
 }
 
 func (c *Config) validate() error {
@@ -31,19 +29,11 @@ func (c *Config) validate() error {
 	}
 
 	for i := 0; i < len(c.Miners); i++ {
-		// Normalize and overwrite before checking
-		statSource := strings.ToLower(c.Miners[i].StatSource)
-		c.Miners[i].StatSource = statSource
-
-		switch statSource {
-		case AxeOS:
-			continue
-		case CGMiner:
-			continue
-		default:
-			errMsg := fmt.Sprintf("Invalid statSource in configuration: %s", statSource)
-			return errors.New(errMsg)
+		err := validateMiner(&c.Miners[i], c)
+		if err != nil {
+			return err
 		}
+
 	}
 	return nil
 }

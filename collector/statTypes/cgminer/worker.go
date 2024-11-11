@@ -58,6 +58,6 @@ func CGMinerWorker(ctx context.Context, miner *conf.MinerConfig, test bool, logg
 	fmt.Printf("Terminating collection worker for %v\n", miner)
 	logger.Debug("Closing connection to miner",
 		zap.String("miner.name", miner.Name),
-		zap.String("miner.address", miner.Address),
+		zap.String("miner.host", miner.Host),
 	)
 }

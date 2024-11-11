@@ -68,9 +68,15 @@ func main() {
 	var wg sync.WaitGroup
 	fmt.Println("Configuration successfully loaded. Initializing collectors...")
 	for i := 0; i < len(config.Miners); i++ {
-		switch config.Miners[i].StatSource {
+		if minerIdx >= 0 && minerIdx != i {
+			continue
+		}
+
+		switch config.Miners[i].Type {
 		case conf.AxeOS:
+			wg.Add(1)
 			logger.Debug("TODO: Implement AxeOS collection worker")
+			wg.Done()
 		case conf.CGMiner:
 			wg.Add(1)
 			go func(c *conf.MinerConfig) {
@@ -78,7 +84,7 @@ func main() {
 				cgminer.CGMinerWorker(ctx, c, test, logger)
 			}(&config.Miners[i])
 		default:
-			logger.Fatal("Unsupported stat source detected", zap.String("statSource", config.Miners[i].StatSource))
+			logger.Fatal("Unsupported stat source detected", zap.String("statSource", config.Miners[i].Type))
 		}
 	}
 	wg.Wait()
