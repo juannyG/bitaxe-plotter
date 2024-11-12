@@ -3,6 +3,7 @@ package conf
 import (
 	"encoding/json"
 	"errors"
+	"miner-stats/collector/conf/stores"
 	"os"
 
 	"go.uber.org/zap"
@@ -20,12 +21,12 @@ type Config struct {
 	StoreConfs map[string]interface{} `json:"stores"`
 
 	// We load StoreConfs into a map of stores for easy retrieval when repeated
-	stores map[string]Store
+	stores map[string]stores.Store
 }
 
 func (c *Config) validate() error {
 	if len(c.Miners) == 0 {
-		return errors.New("No miner configurations found")
+		return errors.New("no miner configurations found")
 	}
 
 	for i := 0; i < len(c.Miners); i++ {
@@ -33,7 +34,6 @@ func (c *Config) validate() error {
 		if err != nil {
 			return err
 		}
-
 	}
 	return nil
 }
@@ -57,6 +57,7 @@ func Load(confFilePath string, logger *zap.Logger) *Config {
 	}
 	logger.Debug("Configuration loaded", zap.Any("config", config))
 
+	config.stores = make(map[string]stores.Store)
 	err = config.validate()
 	if err != nil {
 		logger.Fatal("Configuration error",

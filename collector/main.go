@@ -44,7 +44,7 @@ func main() {
 	flag.Parse()
 
 	cfg := zap.NewProductionConfig()
-	if debug == true {
+	if debug {
 		cfg.Level = zap.NewAtomicLevelAt(zapcore.DebugLevel)
 	}
 	logger, err := cfg.Build()
