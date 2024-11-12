@@ -3,26 +3,11 @@ package conf
 import (
 	"errors"
 	"fmt"
-	"miner-stats/collector/conf/stores"
+	"miner-stats/collector/miners"
 	"strings"
 )
 
-const (
-	AxeOS   string = "axeos"
-	CGMiner string = "cgminer"
-)
-
-type MinerConfig struct {
-	Name     string `json:"name"`
-	Type     string `json:"type"`
-	Host     string `json:"host"`
-	StoreKey string `json:"store"`
-
-	// The Store will be assigned when the StoreKey is validated against a config
-	Store stores.Store
-}
-
-func validateMiner(m *MinerConfig, c *Config) error {
+func validateMiner(m *miners.Miner, c *Config) error {
 	if len(m.Name) == 0 {
 		return errors.New("miner name cannot be empty")
 	}
@@ -39,8 +24,8 @@ func validateMiner(m *MinerConfig, c *Config) error {
 	// Normalize and overwrite miner type before checking
 	m.Type = strings.ToLower(m.Type)
 	switch m.Type {
-	case AxeOS:
-	case CGMiner:
+	case miners.AXEOS_TYPE:
+	case miners.CGMINER_TYPE:
 	default:
 		errMsg := fmt.Sprintf("invalid type: %s", m.Type)
 		return errors.New(errMsg)
@@ -60,7 +45,7 @@ func validateMiner(m *MinerConfig, c *Config) error {
 
 	// If we haven't initialized the store, try to do so
 	fmt.Printf("storeConf: %v", storeConf)
-	store, err := stores.InitStore(storeConf)
+	store, err := miners.InitStore(storeConf)
 	if err != nil {
 		return err
 	}

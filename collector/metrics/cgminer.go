@@ -1,4 +1,4 @@
-package cgminer
+package metrics
 
 // Real talk - this response is huge - just keeping things that may be of interest for now...
 type Stats struct {
@@ -50,7 +50,7 @@ type Summary struct {
 	LastGetwork            int64   `json:"Last getwork"`        // 'Last getwork': 1731415677
 }
 
-type Metrics struct {
+type CGMinerMetrics struct {
 	Summary []Summary `json:"SUMMARY"`
 	Stats   []Stats   `json:"STATS"`
 }

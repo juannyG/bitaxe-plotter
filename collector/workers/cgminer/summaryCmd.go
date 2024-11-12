@@ -2,11 +2,12 @@ package cgminer
 
 import (
 	"encoding/json"
+	"miner-stats/collector/metrics"
 
 	"go.uber.org/zap"
 )
 
-func (cg *CGConnector) getMetrics() (*Metrics, error) {
+func (cg *CGConnector) getMetrics() (*metrics.CGMinerMetrics, error) {
 	summaryRaw, err := cg.executeCmd("summary")
 	if err != nil {
 		cg.logger.Error("could not execute command",
@@ -25,7 +26,7 @@ func (cg *CGConnector) getMetrics() (*Metrics, error) {
 		return nil, err
 	}
 
-	metrics := Metrics{}
+	metrics := metrics.CGMinerMetrics{}
 	err = json.Unmarshal(summaryRaw, &metrics)
 	if err != nil {
 		cg.logger.Error("could not unmarshal summary response", zap.String("summaryRaw", string(summaryRaw)))

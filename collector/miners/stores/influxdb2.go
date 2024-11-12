@@ -1,16 +1,14 @@
-package stores
+package miners
 
 import (
 	"context"
 	"errors"
+	"miner-stats/collector/metrics"
+	"miner-stats/collector/miners"
 	"time"
 
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 	"github.com/influxdata/influxdb-client-go/v2/api/write"
-)
-
-const (
-	INFLUXDB2_TYPE string = "influxdb2"
 )
 
 // Implements Store interface
@@ -20,7 +18,7 @@ type influxDB2Store struct {
 	client influxdb2.Client
 }
 
-func (s influxDB2Store) SendUptime(uptime int64) error {
+func (s influxDB2Store) SendCGMinerMetrics(miner *miners.Miner, metrics *metrics.CGMinerMetrics) error {
 	// TODO: Should org & bucket be configurable?
 	org := "test_org"
 	bucket := "test_bucket"
@@ -30,7 +28,7 @@ func (s influxDB2Store) SendUptime(uptime int64) error {
 		"tagname1": "tagvalue1",
 	}
 	fields := map[string]interface{}{
-		"uptime": uptime,
+		"uptime": metrics.Summary[0].Elapsed,
 	}
 	point := write.NewPoint("measurement1", tags, fields, time.Now())
 
@@ -40,7 +38,7 @@ func (s influxDB2Store) SendUptime(uptime int64) error {
 	return nil
 }
 
-func initInfluxDB2Store(conf map[string]interface{}) (Store, error) {
+func initInfluxDB2Store(conf map[string]interface{}) (miners.Store, error) {
 	host, ok := conf["host"].(string)
 	if !ok {
 		return nil, errors.New("influxdb2 host misconfigured")

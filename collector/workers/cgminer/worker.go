@@ -37,7 +37,7 @@ func CGMinerWorker(ctx context.Context, miner *conf.MinerConfig, test bool, logg
 			if test {
 				running = false
 			} else {
-				err = miner.Store.SendCGMinerMetrics(metrics)
+				err = miner.Store.SendCGMinerMetrics(miner, metrics)
 				if err != nil {
 					logger.Error("unable to send cgminer metrics",
 						zap.String("miner", miner.Name),

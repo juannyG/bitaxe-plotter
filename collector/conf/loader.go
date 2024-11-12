@@ -3,14 +3,14 @@ package conf
 import (
 	"encoding/json"
 	"errors"
-	"miner-stats/collector/conf/stores"
+	"miner-stats/collector/miners"
 	"os"
 
 	"go.uber.org/zap"
 )
 
 type Config struct {
-	Miners []MinerConfig `json:"miners"`
+	Miners []miners.Miner `json:"miners"`
 
 	/**
 	     Marshal the StoreConfs to structs manually based on "type" field
@@ -21,7 +21,7 @@ type Config struct {
 	StoreConfs map[string]interface{} `json:"stores"`
 
 	// We load StoreConfs into a map of stores for easy retrieval when repeated
-	stores map[string]stores.Store
+	stores map[string]miners.Store
 }
 
 func (c *Config) validate() error {
@@ -38,7 +38,7 @@ func (c *Config) validate() error {
 	return nil
 }
 
-func Load(confFilePath string, logger *zap.Logger) *Config {
+func Load(confFilePath string, logger *zap.Logger) *[]miners.Miner {
 	data, err := os.ReadFile(confFilePath)
 	if err != nil {
 		logger.Fatal("An error occured while trying to read the file",
@@ -57,12 +57,12 @@ func Load(confFilePath string, logger *zap.Logger) *Config {
 	}
 	logger.Debug("Configuration loaded", zap.Any("config", config))
 
-	config.stores = make(map[string]stores.Store)
+	config.stores = make(map[string]miners.Store)
 	err = config.validate()
 	if err != nil {
 		logger.Fatal("Configuration error",
 			zap.String("error", err.Error()),
 		)
 	}
-	return &config
+	return &config.Miners
 }
