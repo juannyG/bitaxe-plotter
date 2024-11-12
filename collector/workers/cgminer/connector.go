@@ -15,7 +15,7 @@ type CGConnector struct {
 	logger *zap.Logger
 }
 
-func (cg *CGConnector) executeCmd(cmd string) (data []byte) {
+func (cg *CGConnector) executeCmd(cmd string) (data []byte, err error) {
 	conn, err := net.Dial("tcp", cg.miner.Host)
 	if err != nil {
 		cg.logger.Fatal("Failed to connect to miner", zap.String("miner.Address", cg.miner.Host))
@@ -32,10 +32,11 @@ func (cg *CGConnector) executeCmd(cmd string) (data []byte) {
 		n, err := conn.Read(buf)
 		if err != nil {
 			if err != io.EOF {
-				cg.logger.Error("Connection read error",
+				cg.logger.Debug("Connection read error",
 					zap.String("error", err.Error()),
 					zap.String("cmd", cmd),
 				)
+				return nil, err
 			}
 
 			break
@@ -43,5 +44,5 @@ func (cg *CGConnector) executeCmd(cmd string) (data []byte) {
 		data = append(data, buf[:n]...)
 		length += n
 	}
-	return bytes.Trim(data, "\x00")
+	return bytes.Trim(data, "\x00"), nil
 }

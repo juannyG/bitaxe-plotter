@@ -66,6 +66,7 @@ func validateMiner(m *MinerConfig, c *Config) error {
 	}
 	m.Store = store
 
+	// TODO: Verify m.Store is reference and not a copy for every miner
 	// Keep a reference to the initialized store for future reference
 	c.stores[m.StoreKey] = m.Store
 

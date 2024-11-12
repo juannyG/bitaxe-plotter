@@ -3,18 +3,14 @@ package stores
 import (
 	"errors"
 	"fmt"
+	"miner-stats/collector/workers/cgminer"
 )
 
 type Store interface {
-	/**
-	Does the Store interface ACTUALLY need to implement methods like...
-	SendCGMinerMetrics(...)
+	SendCGMinerMetrics(metrics cgminer.Metrics) error
+	/** TODO:
 	SendBitaxeMetrics(...)
-
-	effectively normalizing WHAT needs to be sent and separating HOW it is sent...
 	*/
-	// InitClient()
-	SendUptime(uptime int64) error
 }
 
 func InitStore(storeConf interface{}) (Store, error) {

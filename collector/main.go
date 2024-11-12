@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"miner-stats/collector/conf"
-	"miner-stats/collector/statTypes/cgminer"
+	"miner-stats/collector/workers/cgminer"
 	"os"
 	"os/signal"
 	"sync"
@@ -40,7 +40,7 @@ func main() {
 	flag.StringVar(&confFilePath, "conf", "", "Path to collector configuration")
 	flag.BoolVar(&debug, "debug", false, "Enable debug level logging")
 	flag.IntVar(&minerIdx, "miner", -1, "Index of miner in configuration to run in isolation.")
-	flag.BoolVar(&test, "test", false, "Run collector in test mode - only one iteration of collection will occur")
+	flag.BoolVar(&test, "test", false, "Run collector in test mode - only one iteration of collection will occur and no stats will be sent to the target store")
 	flag.Parse()
 
 	cfg := zap.NewProductionConfig()

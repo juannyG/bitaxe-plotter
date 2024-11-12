@@ -11,6 +11,7 @@ import (
 
 func CGMinerWorker(ctx context.Context, miner *conf.MinerConfig, test bool, logger *zap.Logger) {
 	// TODO: Make sure the statSource == cgminer
+	// TODO: Count number of errors - after threshold met, shut the worker down
 	fmt.Printf("Initializing collection worker for %v\n", miner)
 	cgConn := CGConnector{miner, logger}
 
@@ -26,13 +27,23 @@ func CGMinerWorker(ctx context.Context, miner *conf.MinerConfig, test bool, logg
 			fmt.Println(err.Error())
 			running = false
 		case <-ticker.C:
-			summary := cgConn.getSummary()
-			logger.Debug("summaryRes", zap.Any("summary", summary))
-			err := miner.Store.SendUptime(summary.Elapsed)
+			metrics, err := cgConn.getMetrics()
 			if err != nil {
-				// TODO: Clean this up a bit - need to be able to return an error out of the worker
-				fmt.Println(err.Error())
+				logger.Error("failed to get cgminer metrics",
+					zap.String("miner", miner.Name),
+					zap.String("error", err.Error()),
+				)
+			}
+			if test {
 				running = false
+			} else {
+				err = miner.Store.SendCGMinerMetrics(metrics)
+				if err != nil {
+					logger.Error("unable to send cgminer metrics",
+						zap.String("miner", miner.Name),
+						zap.String("error", err.Error()),
+					)
+				}
 			}
 		}
 	}
