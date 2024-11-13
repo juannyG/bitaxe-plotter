@@ -82,7 +82,7 @@ func LoadStore(storeKey string, storeConfs map[string]interface{}, logger *zap.L
 		if err != nil {
 			logger.Fatal("influxdb2 client failed to initialize", zap.String("err", err.Error()))
 		}
-		return s
+		return &s
 	default:
 		logger.Fatal("unsupported store", zap.String("store", storeKey))
 	}

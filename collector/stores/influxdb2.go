@@ -23,13 +23,13 @@ type InfluxDB2Store struct {
 	client influxdb2.Client
 }
 
-func (s InfluxDB2Store) Init() error {
+func (s *InfluxDB2Store) Init() error {
 	s.client = influxdb2.NewClient(s.Host, s.Token)
 	s.Logger.Debug("influxdb2 client initialized", zap.Any("influxdb2Store", s))
 	return nil
 }
 
-func (s InfluxDB2Store) SendCGMinerMetrics(miner *miners.Miner, metrics *metrics.CGMinerMetrics) error {
+func (s *InfluxDB2Store) SendCGMinerMetrics(miner *miners.Miner, metrics *metrics.CGMinerMetrics) error {
 	// TODO: Should org & bucket be configurable?
 	org := "test_org"
 	bucket := "test_bucket"
