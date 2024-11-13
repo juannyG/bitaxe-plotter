@@ -36,12 +36,21 @@ func (s *InfluxDB2Store) SendCGMinerMetrics(miner *miners.Miner, metrics *metric
 	writeAPI := s.client.WriteAPIBlocking(org, bucket)
 
 	tags := map[string]string{
-		"tagname1": "tagvalue1",
+		"miner": miner.Name,
+		"type":  miner.Type,
 	}
 	fields := map[string]interface{}{
-		"uptime": metrics.Summary[0].Elapsed,
+		"uptime":                metrics.Summary[0].Elapsed,
+		"mhs5s":                 metrics.Summary[0].Mhs5s,
+		"bestShare":             metrics.Summary[0].BestShare,
+		"accepted":              metrics.Summary[0].Accepted,
+		"deviceRejectedPercent": metrics.Summary[0].DeviceRejectedPerecent,
+		"poolRejectedPerecent":  metrics.Summary[0].PoolRejectedPercent,
+		"nonces":                metrics.Stats[0].Nonces,
+		"maxTaskWait":           metrics.Stats[0].MaxTaskWait,
+		"tasksPerSec":           metrics.Stats[0].TasksPerSec,
 	}
-	point := write.NewPoint("measurement1", tags, fields, time.Now())
+	point := write.NewPoint("stats", tags, fields, time.Now())
 
 	if err := writeAPI.WritePoint(context.Background(), point); err != nil {
 		return err
