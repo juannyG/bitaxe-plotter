@@ -1,5 +1,6 @@
 package metrics
 
+// Response from "stats" command - https://github.com/kanoi/cgminer/blob/a681b3d28b01f6106ef663f6f8cdf0191937cffe/API-README#L295
 // Real talk - this response is huge - just keeping things that may be of interest for now...
 type Stats struct {
 	Nonces      int64   `json:"Nonces"`      // 'Nonces': 1440616,
@@ -18,6 +19,7 @@ type Stats struct {
 	WorkGenAvg  float64 `json:"WorkGenAvg"`  // 'WorkGenAvg': 12.353016, - unit: microseconds - https://github.com/kanoi/cgminer/blob/a681b3d28b01f6106ef663f6f8cdf0191937cffe/driver-gekko.c#L6639C51-L6639C64
 }
 
+// Response from summary command - https://github.com/kanoi/cgminer/blob/a681b3d28b01f6106ef663f6f8cdf0191937cffe/API-README#L161
 type Summary struct {
 	Elapsed                int64   `json:"Elapsed"`             // 'Elapsed': 240867,
 	MhsAvg                 float64 `json:"MHS av"`              // 'MHS av': 1644016.64,
