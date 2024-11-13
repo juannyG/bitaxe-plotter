@@ -2,7 +2,6 @@ package conf
 
 import (
 	"encoding/json"
-	"errors"
 	"miner-stats/collector/miners"
 	"os"
 
@@ -19,26 +18,9 @@ type Config struct {
 		 storeLabel: { ..., type: "storeType" }
 	*/
 	StoreConfs map[string]interface{} `json:"stores"`
-
-	// We load StoreConfs into a map of stores for easy retrieval when repeated
-	stores map[string]miners.Store
 }
 
-func (c *Config) validate() error {
-	if len(c.Miners) == 0 {
-		return errors.New("no miner configurations found")
-	}
-
-	for i := 0; i < len(c.Miners); i++ {
-		err := validateMiner(&c.Miners[i], c)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func Load(confFilePath string, logger *zap.Logger) *[]miners.Miner {
+func Load(confFilePath string, logger *zap.Logger) []miners.Miner {
 	data, err := os.ReadFile(confFilePath)
 	if err != nil {
 		logger.Fatal("An error occured while trying to read the file",
@@ -48,6 +30,7 @@ func Load(confFilePath string, logger *zap.Logger) *[]miners.Miner {
 	logger.Debug("Successfully read configuration", zap.String("conf", confFilePath))
 
 	var config Config
+	config.StoreConfs = make(map[string]interface{})
 	err = json.Unmarshal(data, &config)
 	if err != nil {
 		logger.Fatal("An error occured loading the config file",
@@ -57,12 +40,16 @@ func Load(confFilePath string, logger *zap.Logger) *[]miners.Miner {
 	}
 	logger.Debug("Configuration loaded", zap.Any("config", config))
 
-	config.stores = make(map[string]miners.Store)
-	err = config.validate()
-	if err != nil {
-		logger.Fatal("Configuration error",
-			zap.String("error", err.Error()),
-		)
+	if len(config.Miners) == 0 {
+		logger.Fatal("no miner configurations found")
 	}
-	return &config.Miners
+
+	for i := 0; i < len(config.Miners); i++ {
+		err := validateMiner(&config.Miners[i])
+		if err != nil {
+			logger.Fatal("miner validation failed", zap.String("err", err.Error()))
+		}
+	}
+
+	return config.Miners
 }
