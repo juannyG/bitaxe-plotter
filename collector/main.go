@@ -5,6 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"miner-stats/collector/conf"
+	"miner-stats/collector/miners"
+	"miner-stats/collector/stores"
 	"miner-stats/collector/workers/cgminer"
 	"os"
 	"os/signal"
@@ -58,7 +60,8 @@ func main() {
 		logger.Fatal("No collector configuration file provided.")
 	}
 
-	config := conf.Load(confFilePath, logger)
+	config := conf.LoadMiners(confFilePath, logger)
+	logger.Debug("configuration loaded", zap.Any("config", config))
 	if minerIdx >= 0 && minerIdx >= len(config.Miners) {
 		logger.Fatal("Given miner index to test is out of bounds", zap.Int("test", minerIdx))
 	} else if minerIdx < 0 {
@@ -68,21 +71,25 @@ func main() {
 	var wg sync.WaitGroup
 	fmt.Println("Configuration successfully loaded. Initializing collectors...")
 	for i := 0; i < len(config.Miners); i++ {
+		m := config.Miners[i]
 		if minerIdx >= 0 && minerIdx != i {
 			continue
 		}
 
-		switch config.Miners[i].Type {
-		case conf.AxeOS:
+		// TODO: If safe for concurrent use, reuse the store...
+		store := conf.LoadStore(m.StoreKey, config.StoreConfs, logger)
+
+		switch m.Type {
+		case miners.AXEOS_TYPE:
 			wg.Add(1)
 			logger.Debug("TODO: Implement AxeOS collection worker")
 			wg.Done()
-		case conf.CGMiner:
+		case miners.CGMINER_TYPE:
 			wg.Add(1)
-			go func(c *conf.MinerConfig) {
+			go func(m *miners.Miner, s stores.Store) {
 				defer wg.Done()
-				cgminer.CGMinerWorker(ctx, c, test, logger)
-			}(&config.Miners[i])
+				cgminer.CGMinerWorker(ctx, m, s, test, logger)
+			}(&m, store)
 		default:
 			logger.Fatal("Unsupported stat source detected", zap.String("statSource", config.Miners[i].Type))
 		}

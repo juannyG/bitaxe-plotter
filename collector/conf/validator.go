@@ -32,7 +32,3 @@ func validateMiner(m *miners.Miner) error {
 	}
 	return nil
 }
-
-func validateStore() error {
-	return nil
-}

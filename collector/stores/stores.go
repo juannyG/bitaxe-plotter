@@ -1,4 +1,9 @@
-package miners
+package stores
+
+import (
+	"miner-stats/collector/metrics"
+	"miner-stats/collector/miners"
+)
 
 const (
 	// Store type constants
@@ -6,7 +11,8 @@ const (
 )
 
 type Store interface {
-	// SendCGMinerMetrics(miner *Miner, metrics *metrics.CGMinerMetrics) error
+	Init() error
+	SendCGMinerMetrics(miner *miners.Miner, metrics *metrics.CGMinerMetrics) error
 	/** TODO:
 	SendBitaxeMetrics(...)
 	*/

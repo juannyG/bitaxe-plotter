@@ -3,13 +3,14 @@ package cgminer
 import (
 	"context"
 	"fmt"
-	"miner-stats/collector/conf"
+	"miner-stats/collector/miners"
+	"miner-stats/collector/stores"
 	"time"
 
 	"go.uber.org/zap"
 )
 
-func CGMinerWorker(ctx context.Context, miner *conf.MinerConfig, test bool, logger *zap.Logger) {
+func CGMinerWorker(ctx context.Context, miner *miners.Miner, store stores.Store, test bool, logger *zap.Logger) {
 	// TODO: Make sure the statSource == cgminer
 	// TODO: Count number of errors - after threshold met, shut the worker down
 	fmt.Printf("Initializing collection worker for %v\n", miner)
@@ -37,7 +38,7 @@ func CGMinerWorker(ctx context.Context, miner *conf.MinerConfig, test bool, logg
 			if test {
 				running = false
 			} else {
-				err = miner.Store.SendCGMinerMetrics(miner, metrics)
+				err = store.SendCGMinerMetrics(miner, metrics)
 				if err != nil {
 					logger.Error("unable to send cgminer metrics",
 						zap.String("miner", miner.Name),

@@ -3,6 +3,7 @@ package conf
 import (
 	"encoding/json"
 	"miner-stats/collector/miners"
+	"miner-stats/collector/stores"
 	"os"
 
 	"go.uber.org/zap"
@@ -13,14 +14,13 @@ type Config struct {
 
 	/**
 	     Marshal the StoreConfs to structs manually based on "type" field
-	     and assign the appropriate instance to MinerConfig[x].Store
 
 		 storeLabel: { ..., type: "storeType" }
 	*/
 	StoreConfs map[string]interface{} `json:"stores"`
 }
 
-func Load(confFilePath string, logger *zap.Logger) []miners.Miner {
+func LoadMiners(confFilePath string, logger *zap.Logger) *Config {
 	data, err := os.ReadFile(confFilePath)
 	if err != nil {
 		logger.Fatal("An error occured while trying to read the file",
@@ -51,5 +51,43 @@ func Load(confFilePath string, logger *zap.Logger) []miners.Miner {
 		}
 	}
 
-	return config.Miners
+	return &config
+}
+
+func LoadStore(storeKey string, storeConfs map[string]interface{}, logger *zap.Logger) stores.Store {
+	storeConf, ok := storeConfs[storeKey]
+	if !ok {
+		logger.Fatal("miner store does not match any store label", zap.String("store", storeKey))
+	}
+
+	// All store configurations must have a "type" field defined
+	storeType, ok := storeConf.(map[string]interface{})["type"]
+	if !ok {
+		logger.Fatal("could not load store configuration", zap.String("store", storeKey))
+	}
+
+	switch storeType {
+	case stores.INFLUXDB2_TYPE:
+		s := stores.InfluxDB2Store{Logger: logger}
+		j, _ := json.Marshal(storeConf)
+		json.Unmarshal(j, &s)
+		if len(s.Host) == 0 {
+			logger.Fatal("influxdb2 host missing", zap.String("store", storeKey))
+		}
+		if len(s.Token) == 0 {
+			logger.Fatal("influxdb2 token missing", zap.String("store", storeKey))
+		}
+
+		err := s.Init()
+		if err != nil {
+			logger.Fatal("influxdb2 client failed to initialize", zap.String("err", err.Error()))
+		}
+		return s
+	default:
+		logger.Fatal("unsupported store", zap.String("store", storeKey))
+	}
+
+	// We should never get here...
+	logger.Fatal("xxxxxx")
+	return nil
 }

@@ -1,24 +1,35 @@
-package miners
+package stores
 
 import (
 	"context"
-	"errors"
 	"miner-stats/collector/metrics"
 	"miner-stats/collector/miners"
 	"time"
 
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 	"github.com/influxdata/influxdb-client-go/v2/api/write"
+	"go.uber.org/zap"
 )
 
 // Implements Store interface
-type influxDB2Store struct {
-	// TODO: Verify if this is reused or created per miner config instance
-	// TODO: Determine concurrency safety...
+type InfluxDB2Store struct {
+	Host   string `json:"host"`
+	Token  string `json:"token"`
+	Type   string `json:"type"`
+	Logger *zap.Logger
+
+	// TODO: Make sure we reuse clients and don't create one per miner config
+	// Client is safe for concurrent use: https://pkg.go.dev/github.com/influxdata/influxdb-client-go/v2@v2.14.0#readme-concurrency
 	client influxdb2.Client
 }
 
-func (s influxDB2Store) SendCGMinerMetrics(miner *miners.Miner, metrics *metrics.CGMinerMetrics) error {
+func (s InfluxDB2Store) Init() error {
+	s.client = influxdb2.NewClient(s.Host, s.Token)
+	s.Logger.Debug("influxdb2 client initialized", zap.Any("influxdb2Store", s))
+	return nil
+}
+
+func (s InfluxDB2Store) SendCGMinerMetrics(miner *miners.Miner, metrics *metrics.CGMinerMetrics) error {
 	// TODO: Should org & bucket be configurable?
 	org := "test_org"
 	bucket := "test_bucket"
@@ -36,19 +47,4 @@ func (s influxDB2Store) SendCGMinerMetrics(miner *miners.Miner, metrics *metrics
 		return err
 	}
 	return nil
-}
-
-func initInfluxDB2Store(conf map[string]interface{}) (miners.Store, error) {
-	host, ok := conf["host"].(string)
-	if !ok {
-		return nil, errors.New("influxdb2 host misconfigured")
-	}
-	token, ok := conf["token"].(string)
-	if !ok {
-		return nil, errors.New("influxdb2 token misconfigured")
-	}
-
-	s := influxDB2Store{}
-	s.client = influxdb2.NewClient(host, token)
-	return s, nil
 }

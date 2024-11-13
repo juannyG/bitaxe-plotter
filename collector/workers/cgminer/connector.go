@@ -4,14 +4,14 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"miner-stats/collector/conf"
+	"miner-stats/collector/miners"
 	"net"
 
 	"go.uber.org/zap"
 )
 
 type CGConnector struct {
-	miner  *conf.MinerConfig
+	miner  *miners.Miner
 	logger *zap.Logger
 }
 
