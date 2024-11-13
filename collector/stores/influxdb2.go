@@ -16,6 +16,8 @@ type InfluxDB2Store struct {
 	Host   string `json:"host"`
 	Token  string `json:"token"`
 	Type   string `json:"type"`
+	Org    string `json:"org"`
+	Bucket string `json:"bucket"`
 	Logger *zap.Logger
 
 	// TODO: Make sure we reuse clients and don't create one per miner config
@@ -30,10 +32,7 @@ func (s *InfluxDB2Store) Init() error {
 }
 
 func (s *InfluxDB2Store) SendCGMinerMetrics(miner *miners.Miner, metrics *metrics.CGMinerMetrics) error {
-	// TODO: Should org & bucket be configurable?
-	org := "test_org"
-	bucket := "test_bucket"
-	writeAPI := s.client.WriteAPIBlocking(org, bucket)
+	writeAPI := s.client.WriteAPIBlocking(s.Org, s.Bucket)
 
 	tags := map[string]string{
 		"miner": miner.Name,
