@@ -16,6 +16,10 @@ package metrics
   - "invertfanpolarity"
   - "autofanspeed"
   - "fanspeed"
+  - "ssid"
+  - "hostname"
+  - "asicCount"
+  - "wifiStatus"
 */
 
 type SystemInfo struct {
@@ -31,13 +35,9 @@ type SystemInfo struct {
 	// "coreVoltage":	1150,
 	// "coreVoltageActual":	1111,
 	// "frequency":	596,
-	// "ssid":	"xfn24",
-	// "hostname":	"bitaxe",
-	// "wifiStatus":	"Connected!",
 	// "sharesAccepted":	151177,
 	// "sharesRejected":	131,
 	// "uptimeSeconds":	415219,
-	// "asicCount":	1,
 	// "smallCoreCount":	2040,
 	// "fanrpm":	8095
 }
