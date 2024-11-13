@@ -77,6 +77,13 @@ func LoadStore(storeKey string, storeConfs map[string]interface{}, logger *zap.L
 		if len(s.Token) == 0 {
 			logger.Fatal("influxdb2 token missing", zap.String("store", storeKey))
 		}
+		if len(s.Org) == 0 {
+			logger.Fatal("influxdb2 org missing", zap.String("store", storeKey))
+		}
+
+		if len(s.Bucket) == 0 {
+			logger.Fatal("influxdb2 bucket missing", zap.String("store", storeKey))
+		}
 
 		err := s.Init()
 		if err != nil {

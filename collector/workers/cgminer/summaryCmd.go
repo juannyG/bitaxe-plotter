@@ -37,5 +37,6 @@ func (cg *CGConnector) getMetrics() (*metrics.CGMinerMetrics, error) {
 		cg.logger.Error("could not unmarshal stats response", zap.String("statsRaw", string(statsRaw)))
 		return nil, err
 	}
+	cg.logger.Debug("metrics", zap.Any("metrics", metrics))
 	return &metrics, nil
 }
