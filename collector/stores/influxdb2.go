@@ -39,14 +39,13 @@ func (s *InfluxDB2Store) SendCGMinerMetrics(miner *miners.Miner, metrics *metric
 		"type":  miner.Type,
 	}
 	fields := map[string]interface{}{
-		"summaryAccepted":       metrics.Summary[0].Accepted,
+		"accepted":              metrics.Summary[0].Accepted,
 		"bestShare":             metrics.Summary[0].BestShare,
 		"deviceRejectedPercent": metrics.Summary[0].DeviceRejectedPerecent,
 		"difficultyAccepted":    metrics.Summary[0].DifficultyAccepted,
 		"uptime":                metrics.Summary[0].Elapsed,
 		"mhs5s":                 metrics.Summary[0].Mhs5s,
 		"poolRejectedPercent":   metrics.Summary[0].PoolRejectedPercent,
-		"statsAccepted":         metrics.Stats[0].Accepted,
 		"nonces":                metrics.Stats[0].Nonces,
 		"tasksPerSec":           metrics.Stats[0].TasksPerSec,
 		"workGenAvg":            metrics.Stats[0].WorkGenAvg,
