@@ -70,7 +70,7 @@ func LoadStore(storeKey string, storeConfs map[string]interface{}, logger *zap.L
 	case stores.INFLUXDB2_TYPE:
 		s := stores.InfluxDB2Store{Logger: logger}
 		j, _ := json.Marshal(storeConf)
-		json.Unmarshal(j, &s)
+		_ = json.Unmarshal(j, &s)
 		if len(s.Host) == 0 {
 			logger.Fatal("influxdb2 host missing", zap.String("store", storeKey))
 		}

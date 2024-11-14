@@ -26,7 +26,10 @@ func (cg *CGConnector) executeCmd(cmd string) (data []byte, err error) {
 
 	connCmd := fmt.Sprintf(`{"command": "%s"}`, cmd)
 	cg.logger.Debug("command prepared", zap.String("connCmd", connCmd))
-	conn.Write([]byte(connCmd))
+	_, err = conn.Write([]byte(connCmd))
+	if err != nil {
+		return nil, err
+	}
 
 	length := 0
 	buf := make([]byte, 256)

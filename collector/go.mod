@@ -10,5 +10,7 @@ require (
 	github.com/oapi-codegen/runtime v1.0.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
-	golang.org/x/net v0.23.0 // indirect
+	golang.org/x/lint v0.0.0-20241112194109-818c5a804067 // indirect
+	golang.org/x/net v0.31.0 // indirect
+	golang.org/x/tools v0.27.0 // indirect
 )
