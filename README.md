@@ -1,6 +1,6 @@
-# bitaxe-plotter
+# miner-log
 
-TODO
+Log the metrics of your miners.
 
 ---
 
