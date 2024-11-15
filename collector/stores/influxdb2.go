@@ -51,7 +51,44 @@ func (s *InfluxDB2Store) SendCGMinerMetrics(miner *miners.Miner, metrics *metric
 		"workGenAvg":            metrics.Stats[0].WorkGenAvg,
 	}
 	s.Logger.Debug("fields", zap.Any("fields", fields))
-	point := write.NewPoint("stats", tags, fields, time.Now())
+	point := write.NewPoint("cgminer", tags, fields, time.Now())
+
+	if err := writeAPI.WritePoint(context.Background(), point); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *InfluxDB2Store) SendAxeOSMetrics(miner *miners.Miner, metrics *metrics.AxeOSSystemInfo) error {
+	writeAPI := s.client.WriteAPIBlocking(s.Org, s.Bucket)
+
+	tags := map[string]string{
+		"miner": miner.Name,
+		"type":  miner.Type,
+	}
+
+	rejectedPercent := (float64(metrics.SharesRejected) / float64(metrics.SharesAccepted+metrics.SharesRejected)) * 100
+	fields := map[string]interface{}{
+		"power":             metrics.Power,
+		"voltage":           metrics.Voltage,
+		"current":           metrics.Current,
+		"temp":              metrics.Temp,
+		"vRTemp":            metrics.VRTemp,
+		"hashRate":          metrics.HashRate,
+		"bestDiff":          metrics.BestDiff,
+		"bestSessionDiff":   metrics.BestSessionDiff,
+		"freeHeap":          metrics.FreeHeap,
+		"coreVoltage":       metrics.CoreVoltage,
+		"coreVoltageActual": metrics.CoreVoltageActual,
+		"frequency":         metrics.Frequency,
+		"sharesAccepted":    metrics.SharesAccepted,
+		"sharesRejected":    metrics.SharesRejected,
+		"rejectionPercent":  rejectedPercent,
+		"uptimeSeconds":     metrics.UptimeSeconds,
+		"fanRPM":            metrics.FanRPM,
+	}
+	s.Logger.Debug("fields", zap.Any("fields", fields))
+	point := write.NewPoint("axeos", tags, fields, time.Now())
 
 	if err := writeAPI.WritePoint(context.Background(), point); err != nil {
 		return err

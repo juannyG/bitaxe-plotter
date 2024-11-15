@@ -16,6 +16,7 @@ import (
 
 func AxeOSWorker(ctx context.Context, miner *miners.Miner, store stores.Store, test bool, logger *zap.Logger) {
 
+	fmt.Printf("Initializing collection worker for %v\n", miner)
 	url := fmt.Sprintf("http://%s/api/system/info", miner.Host)
 	ticker := time.NewTicker(5 * time.Second)
 	defer ticker.Stop()
@@ -48,7 +49,7 @@ func AxeOSWorker(ctx context.Context, miner *miners.Miner, store stores.Store, t
 			}
 			logger.Debug("raw response", zap.String("respBody", string(body)))
 
-			metrics := metrics.SystemInfo{}
+			metrics := metrics.AxeOSSystemInfo{}
 			err = json.Unmarshal(body, &metrics)
 			if err != nil {
 				logger.Error("failed to unmarshal axeos metrics response",
@@ -57,9 +58,17 @@ func AxeOSWorker(ctx context.Context, miner *miners.Miner, store stores.Store, t
 				)
 				continue
 			}
+			logger.Debug("axeos metrics", zap.String("miner", miner.Name), zap.Any("metrics", metrics))
 			if test {
-				logger.Debug("axeos metrics", zap.String("miner", miner.Name), zap.Any("metrics", metrics))
 				running = false
+			} else {
+				err = store.SendAxeOSMetrics(miner, &metrics)
+				if err != nil {
+					logger.Error("unable to send axeos metrics",
+						zap.String("miner", miner.Name),
+						zap.String("error", err.Error()),
+					)
+				}
 			}
 		}
 	}

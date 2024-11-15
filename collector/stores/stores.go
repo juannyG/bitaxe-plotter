@@ -13,7 +13,5 @@ const (
 type Store interface {
 	Init() error
 	SendCGMinerMetrics(miner *miners.Miner, metrics *metrics.CGMinerMetrics) error
-	/** TODO:
-	SendBitaxeMetrics(...)
-	*/
+	SendAxeOSMetrics(miner *miners.Miner, metrics *metrics.AxeOSSystemInfo) error
 }

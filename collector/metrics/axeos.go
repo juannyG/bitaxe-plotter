@@ -23,7 +23,7 @@ package metrics
   - "smallCoreCount"
 */
 
-type SystemInfo struct {
+type AxeOSSystemInfo struct {
 	Power             float64 `json:"power"`             // "power":	18.60382080078125,
 	Voltage           float64 `json:"voltage"`           // "voltage":	5101.5625,
 	Current           float64 `json:"current"`           // "current":	11906.25, - TODO: What is this?
