@@ -7,10 +7,12 @@ import (
 	"miner-stats/collector/conf"
 	"miner-stats/collector/miners"
 	"miner-stats/collector/stores"
+	"miner-stats/collector/workers/axeos"
 	"miner-stats/collector/workers/cgminer"
 	"os"
 	"os/signal"
 	"sync"
+	"syscall"
 
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -25,7 +27,7 @@ func main() {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
 	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, os.Kill)
+	signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 	defer func() {
 		signal.Stop(c)
 		cancel()
@@ -54,7 +56,9 @@ func main() {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
-	defer logger.Sync()
+	defer func(logger *zap.Logger) {
+		_ = logger.Sync()
+	}(logger)
 
 	if confFilePath == "" {
 		logger.Fatal("No collector configuration file provided.")
@@ -82,8 +86,10 @@ func main() {
 		switch m.Type {
 		case miners.AXEOS_TYPE:
 			wg.Add(1)
-			logger.Debug("TODO: Implement AxeOS collection worker")
-			wg.Done()
+			go func(m *miners.Miner, s stores.Store) {
+				defer wg.Done()
+				axeos.AxeOSWorker(ctx, m, s, test, logger)
+			}(&m, store)
 		case miners.CGMINER_TYPE:
 			wg.Add(1)
 			go func(m *miners.Miner, s stores.Store) {

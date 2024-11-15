@@ -34,6 +34,7 @@ func CGMinerWorker(ctx context.Context, miner *miners.Miner, store stores.Store,
 					zap.String("miner", miner.Name),
 					zap.String("error", err.Error()),
 				)
+				continue
 			}
 			if test {
 				running = false
