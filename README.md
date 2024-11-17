@@ -1,42 +1,96 @@
-# miner-log
+# sluice-box
 
-Log the metrics of your miners.
+TODO: Title this
+* golang 1.22.2
+* Miner types supported
+  * [AxeOS - Skot's ESP-Miner](https://github.com/skot/ESP-Miner?tab=readme-ov-file#axeos-api)
+  * [Kano's cgminer 4.13.1](https://github.com/kanoi/cgminer)
 
----
+Supported metric stores
+* [InfluxDB2](https://docs.influxdata.com/influxdb/v2/install/?t=Docker)
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Usage
+* Coming soon
 
-## Getting Started
+Configuration
+* Coming soon
 
-First, run the development server:
+# Quickstart
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Visualizations in this example use [Grafana](https://grafana.com/docs/grafana/latest/setup-grafana/installation/docker/#use-bind-mounts)
+
+## Start up the data store
+
+A sample `docker-compose.yaml` file has been provided that loads up
+* InfluxDB2 - accessible via http://localhost:8086 - this is where the collector sends metrics
+* Grafana - accessible via http://localhost:3000 - this is a tool for visualizing metrics
+
+To get them running, run the following command
+```sh
+docker compose up -d
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+##### WARNING: The credentials in `docker-compose.yaml` are STRICTLY for local use ONLY.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Configure Grafana access to InfluxDB2
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+* Login to your local InfluxDB2 instance - http://localhost:8086
+* Create an [InfluxDB2 token](https://docs.influxdata.com/influxdb/v2/admin/tokens/create-token/) for grafana
+  * Keep the generated token on hand as it'll be gone once you navigate away. You can always trash and create a new one in this UI
+* Log in to your local Grafana instance - http://localhost:3000 - admin/admin and change your password as you see fit
+* Click on "Add your first data source"
+* Click on "InfluxDB"
+* Configure the following options
+  * Query Language: `Flux`
+  * HTTP - URL: `http://influxdb2:8086`
+  * Deselect any options already selected in the Auth section
+  * Organization: `collector`
+  * Token: Past the InfluxDB2 token generated earlier
+  * Bucket: `miners`
 
-## Learn More
+[Useful reference when using docker compose with these tools](https://community.grafana.com/t/connection-refused-error-reading-buckets/71749/18)
 
-To learn more about Next.js, take a look at the following resources:
+## Configuring the collector
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Coming soon...
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### InfluxDB2
 
-## Deploy on Vercel
+Create an [InfluxDB2 token](https://docs.influxdata.com/influxdb/v2/admin/tokens/create-token/) for the collector
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Sample file
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```json
+{
+  "miners": [
+    {
+      "name": "gekkosci.r909[0]",
+      "type": "cgminer",
+      "host": "10.0.0.216:4028",
+      "store": "localInflux"
+    }
+  ],
+  "stores": {
+    "localInflux": {
+      "host": "http://localhost:8086",
+      "token": "token-generated-"
+      "org": "collector",
+      "bucket": "miners",
+      "type": "influxdb2"
+    }
+  }
+}
+
+```
+
+## Start the collector
+
+Coming soon...
+
+## Development
+
+Adding new metric stores
+* Coming soon
+
+Adding a new miner types
+* Coming soon
