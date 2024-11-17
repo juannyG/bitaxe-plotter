@@ -22,7 +22,9 @@ services:
       - 3000:3000
     volumes:
       - grafana-data:/var/lib/grafana
+      - grafana-config:/etc/grafana
 volumes:
   influxdb2-data:
   influxdb2-config:
   grafana-data: {}
+  grafana-config: {}
